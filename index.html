@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Retirement Planning Portal</title>
+    <title>Financial Calculators</title>
     <style>
         * {
             margin: 0;
@@ -15,663 +15,299 @@
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
             padding: 20px;
         }
         
-        .login-container {
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
             background: white;
             border-radius: 20px;
             box-shadow: 0 20px 40px rgba(0,0,0,0.1);
-            padding: 60px 50px;
-            max-width: 400px;
-            width: 100%;
-            text-align: center;
+            overflow: hidden;
         }
         
-        .logo {
-            font-size: 3rem;
-            margin-bottom: 20px;
-        }
-        
-        .title {
-            font-size: 2rem;
-            color: #2c3e50;
-            margin-bottom: 10px;
-            font-weight: 600;
-        }
-        
-        .subtitle {
-            color: #7f8c8d;
-            margin-bottom: 40px;
-            font-size: 1.1rem;
-        }
-        
-        .form-group {
-            margin-bottom: 25px;
-            text-align: left;
-        }
-        
-        .form-group label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: 600;
-            color: #34495e;
-        }
-        
-        .form-group input {
-            width: 100%;
-            padding: 15px;
-            border: 2px solid #e1e8ed;
-            border-radius: 10px;
-            font-size: 1rem;
-            transition: border-color 0.3s ease;
-        }
-        
-        .form-group input:focus {
-            outline: none;
-            border-color: #667eea;
-            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
-        }
-        
-        .login-btn {
-            width: 100%;
-            background: linear-gradient(135deg, #667eea, #764ba2);
-            color: white;
-            border: none;
-            padding: 15px;
-            font-size: 1.1rem;
-            font-weight: 600;
-            border-radius: 10px;
-            cursor: pointer;
-            transition: transform 0.2s ease;
-            margin-bottom: 30px;
-        }
-        
-        .login-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
-        }
-        
-        .login-btn:disabled {
-            background: #bdc3c7;
-            cursor: not-allowed;
-            transform: none;
-        }
-        
-        .links {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 10px;
-        }
-        
-        .link {
-            color: #667eea;
-            text-decoration: none;
-            font-weight: 600;
-            font-size: 0.95rem;
-            transition: color 0.3s;
-        }
-        
-        .link:hover {
-            color: #5a6fd8;
-            text-decoration: underline;
-        }
-        
-        .message {
-            margin-bottom: 20px;
-            padding: 12px;
-            border-radius: 8px;
-            display: none;
-        }
-        
-        .message.error {
-            background: #ffe6e6;
-            color: #d63031;
-            border-left: 4px solid #d63031;
-        }
-        
-        .message.success {
-            background: #e8f5e8;
-            color: #27ae60;
-            border-left: 4px solid #27ae60;
-        }
-        
-        .hidden {
-            display: none;
-        }
-        
-        /* Dashboard Styles */
-        .dashboard-container {
-            background: white;
-            border-radius: 20px;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
-            max-width: 800px;
-            width: 100%;
-            min-height: 60vh;
-        }
-        
-        .dashboard-header {
+        .header {
             background: linear-gradient(135deg, #2c3e50, #4a6741);
             color: white;
-            padding: 30px;
-            border-radius: 20px 20px 0 0;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
+            padding: 40px;
+            text-align: center;
+            position: relative;
         }
         
-        .dashboard-title {
-            font-size: 2rem;
-            font-weight: 600;
+        .header h1 {
+            font-size: 2.8rem;
+            margin-bottom: 15px;
         }
         
-        .user-info {
-            display: flex;
-            align-items: center;
-            gap: 15px;
+        .header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            max-width: 600px;
+            margin: 0 auto;
         }
         
-        .logout-btn {
+        .back-btn {
+            position: absolute;
+            top: 20px;
+            left: 30px;
             background: rgba(255,255,255,0.2);
             color: white;
             border: 1px solid rgba(255,255,255,0.3);
             padding: 10px 20px;
             border-radius: 8px;
             cursor: pointer;
+            text-decoration: none;
             transition: background 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
         
-        .logout-btn:hover {
+        .back-btn:hover {
             background: rgba(255,255,255,0.3);
         }
         
-        .dashboard-content {
-            padding: 40px;
-            text-align: center;
+        .calculators-grid {
+            padding: 50px 40px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 40px;
+            max-width: 1000px;
+            margin: 0 auto;
         }
         
-        .welcome-message {
-            font-size: 1.5rem;
+        .calculator-card {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+            border: 3px solid transparent;
+            text-align: center;
+            cursor: pointer;
+            text-decoration: none;
+            color: inherit;
+        }
+        
+        .calculator-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 50px rgba(0,0,0,0.15);
+            border-color: #667eea;
+        }
+        
+        .calculator-icon {
+            font-size: 4rem;
+            margin-bottom: 25px;
+            display: block;
+        }
+        
+        .retirement-card .calculator-icon {
+            color: #27ae60;
+        }
+        
+        .insurance-card .calculator-icon {
+            color: #e74c3c;
+        }
+        
+        .calculator-card h2 {
+            font-size: 1.8rem;
             color: #2c3e50;
+            margin-bottom: 20px;
+            font-weight: 700;
+        }
+        
+        .calculator-card p {
+            color: #666;
+            line-height: 1.6;
+            margin-bottom: 25px;
+            font-size: 1.1rem;
+        }
+        
+        .features-list {
+            text-align: left;
             margin-bottom: 30px;
+        }
+        
+        .features-list li {
+            color: #555;
+            margin-bottom: 8px;
+            padding-left: 20px;
+            position: relative;
+        }
+        
+        .features-list li::before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: #27ae60;
+            font-weight: bold;
+        }
+        
+        .insurance-card .features-list li::before {
+            color: #e74c3c;
         }
         
         .calculator-btn {
             background: linear-gradient(135deg, #667eea, #764ba2);
             color: white;
             border: none;
-            padding: 20px 40px;
-            font-size: 1.2rem;
+            padding: 15px 30px;
+            font-size: 1.1rem;
             font-weight: 600;
-            border-radius: 12px;
+            border-radius: 10px;
             cursor: pointer;
-            transition: transform 0.2s ease;
-            text-decoration: none;
-            display: inline-block;
-            margin: 10px;
+            transition: all 0.3s ease;
+            width: 100%;
         }
         
         .calculator-btn:hover {
+            background: linear-gradient(135deg, #5a67d8, #6b46c1);
             transform: translateY(-2px);
-            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+        }
+        
+        .retirement-card:hover .calculator-btn {
+            background: linear-gradient(135deg, #27ae60, #229954);
+        }
+        
+        .insurance-card:hover .calculator-btn {
+            background: linear-gradient(135deg, #e74c3c, #c0392b);
+        }
+        
+        .coming-soon {
+            background: #f8f9fa;
+            border: 2px dashed #dee2e6;
+            color: #6c757d;
+            cursor: default;
+        }
+        
+        .coming-soon:hover {
+            transform: none;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            border-color: #dee2e6;
+        }
+        
+        .coming-soon .calculator-icon {
+            color: #6c757d;
+        }
+        
+        .coming-soon .calculator-btn {
+            background: #6c757d;
+            cursor: not-allowed;
+        }
+        
+        .coming-soon .calculator-btn:hover {
+            background: #6c757d;
+            transform: none;
         }
         
         @media (max-width: 768px) {
-            .login-container {
-                padding: 40px 30px;
+            .calculators-grid {
+                grid-template-columns: 1fr;
+                padding: 30px 20px;
+                gap: 30px;
             }
             
-            .dashboard-header {
-                flex-direction: column;
-                gap: 20px;
-                text-align: center;
+            .calculator-card {
+                padding: 30px 20px;
             }
             
-            .links {
-                flex-direction: column;
-                text-align: center;
+            .header h1 {
+                font-size: 2.2rem;
+            }
+            
+            .header p {
+                font-size: 1rem;
+            }
+            
+            .back-btn {
+                position: static;
+                margin-bottom: 20px;
+                align-self: flex-start;
+                display: inline-flex;
             }
         }
     </style>
 </head>
 <body>
-    <!-- Login Page -->
-    <div id="loginPage" class="login-container">
-        <div class="logo">🏖️</div>
-        <h1 class="title">Welcome Back</h1>
-        <p class="subtitle">Sign in to your retirement planning account</p>
-        
-        <div id="loginMessage" class="message"></div>
-        
-        <form id="loginForm">
-            <div class="form-group">
-                <label for="email">Email Address</label>
-                <input type="email" id="email" required>
-            </div>
-            
-            <div class="form-group">
-                <label for="password">Password</label>
-                <input type="password" id="password" required>
-            </div>
-            
-            <button type="submit" class="login-btn" id="loginBtn">
-                Sign In
-            </button>
-        </form>
-        
-        <div class="links">
-            <a href="#" class="link" onclick="showForgotPassword()">Forgot Password?</a>
-            <a href="#" class="link" onclick="showRegister()">Create Account</a>
-        </div>
-    </div>
-    
-    <!-- Register Page -->
-    <div id="registerPage" class="login-container hidden">
-        <div class="logo">🏖️</div>
-        <h1 class="title">Create Account</h1>
-        <p class="subtitle">Start planning your retirement today</p>
-        
-        <div id="registerMessage" class="message"></div>
-        
-        <form id="registerForm">
-            <div class="form-group">
-                <label for="regEmail">Email Address</label>
-                <input type="email" id="regEmail" required>
-            </div>
-            
-            <div class="form-group">
-                <label for="regPassword">Password</label>
-                <input type="password" id="regPassword" required minlength="6">
-            </div>
-            
-            <div class="form-group">
-                <label for="confirmPassword">Confirm Password</label>
-                <input type="password" id="confirmPassword" required minlength="6">
-            </div>
-            
-            <button type="submit" class="login-btn" id="registerBtn">
-                Create Account
-            </button>
-        </form>
-        
-        <div class="links">
-            <a href="#" class="link" onclick="showLogin()">Already have an account? Sign In</a>
-        </div>
-    </div>
-    
-    <!-- Forgot Password Page -->
-    <div id="forgotPage" class="login-container hidden">
-        <div class="logo">🏖️</div>
-        <h1 class="title">Reset Password</h1>
-        <p class="subtitle">Enter your email to receive reset instructions</p>
-        
-        <div id="forgotMessage" class="message"></div>
-        
-        <form id="forgotForm">
-            <div class="form-group">
-                <label for="forgotEmail">Email Address</label>
-                <input type="email" id="forgotEmail" required>
-            </div>
-            
-            <button type="submit" class="login-btn" id="forgotBtn">
-                Send Reset Link
-            </button>
-        </form>
-        
-        <div class="links">
-            <a href="#" class="link" onclick="showLogin()">Back to Sign In</a>
-        </div>
-    </div>
-    
-    <!-- Dashboard -->
-    <div id="dashboardPage" class="dashboard-container hidden">
-        <div class="dashboard-header">
-            <h1 class="dashboard-title">🏖️ Retirement Planning Portal</h1>
-            <div class="user-info">
-                <span id="userEmail"></span>
-                <button class="logout-btn" onclick="logout()">Logout</button>
-            </div>
-        </div>
-        <div class="dashboard-content">
-            <h2 class="welcome-message">Welcome to your retirement planning dashboard!</h2>
-            <p style="color: #7f8c8d; margin-bottom: 40px; font-size: 1.1rem;">
-                Calculate your retirement income and plan for your financial future.
-            </p>
-            <a href="calculator.html" class="calculator-btn">
-                📊 Start Retirement Calculator
+    <div class="container">
+        <div class="header">
+            <a href="index.html" class="back-btn">
+                ← Back to Home
             </a>
+            <h1>Financial Planning Calculators</h1>
+            <p>Choose the right calculator for your client's needs. Each tool provides comprehensive analysis and professional reports.</p>
+        </div>
+        
+        <div class="calculators-grid">
+            <!-- Retirement Calculator -->
+            <a href="calculator.html" class="calculator-card retirement-card">
+                <div class="calculator-icon">🏖️</div>
+                <h2>Retirement Income Calculator</h2>
+                <p>Comprehensive retirement planning tool for Canadian accounts (RRSP, TFSA, CPP, OAS) with inflation-adjusted projections.</p>
+                
+                <ul class="features-list">
+                    <li>RRSP & TFSA contribution analysis</li>
+                    <li>Government benefits integration</li>
+                    <li>Spouse planning support</li>
+                    <li>4% withdrawal rule calculations</li>
+                    <li>Professional PDF reports</li>
+                </ul>
+                
+                <button class="calculator-btn">Start Retirement Analysis</button>
+            </a>
+            
+            <!-- Insurance Calculator -->
+            <a href="insurance-calculator.html" class="calculator-card insurance-card">
+                <div class="calculator-icon">🛡️</div>
+                <h2>Life Insurance Needs Calculator</h2>
+                <p>Determine optimal life insurance coverage using multiple calculation methods tailored to your client's situation.</p>
+                
+                <ul class="features-list">
+                    <li>Needs analysis methodology</li>
+                    <li>Income replacement calculations</li>
+                    <li>Hybrid approach options</li>
+                    <li>Debt & education planning</li>
+                    <li>Coverage recommendations</li>
+                </ul>
+                
+                <button class="calculator-btn">Start Insurance Analysis</button>
+            </a>
+            
+            <!-- Future Calculator Placeholder -->
+            <div class="calculator-card coming-soon">
+                <div class="calculator-icon">🏠</div>
+                <h2>Mortgage Calculator</h2>
+                <p>Coming soon - Comprehensive mortgage analysis including affordability, amortization, and refinancing scenarios.</p>
+                
+                <ul class="features-list">
+                    <li>Affordability analysis</li>
+                    <li>Payment comparisons</li>
+                    <li>Refinancing scenarios</li>
+                    <li>Prepayment strategies</li>
+                    <li>Total cost analysis</li>
+                </ul>
+                
+                <button class="calculator-btn">Coming Soon</button>
+            </div>
+            
+            <!-- Future Calculator Placeholder -->
+            <div class="calculator-card coming-soon">
+                <div class="calculator-icon">📈</div>
+                <h2>Investment Calculator</h2>
+                <p>Coming soon - Investment growth projections, portfolio analysis, and asset allocation recommendations.</p>
+                
+                <ul class="features-list">
+                    <li>Growth projections</li>
+                    <li>Risk analysis</li>
+                    <li>Asset allocation</li>
+                    <li>Tax efficiency</li>
+                    <li>Performance tracking</li>
+                </ul>
+                
+                <button class="calculator-btn">Coming Soon</button>
+            </div>
         </div>
     </div>
-    
-    <!-- Supabase JS -->
-    <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
-    
-    <script>
-        // Supabase configuration
-        const SUPABASE_URL = 'https://znouzvccbqnaubeankos.supabase.co';
-        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inpub3V6dmNjYnFuYXViZWFua29zIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTcwMzExODIsImV4cCI6MjA3MjYwNzE4Mn0.eZnmUqFYu7x_LbnkrviGt3TZkqWf0lyVIgWeTNmjNYw';
-        
-        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-        let currentUser = null;
-        
-        // Page Navigation
-        function showLogin() {
-            document.getElementById('loginPage').classList.remove('hidden');
-            document.getElementById('registerPage').classList.add('hidden');
-            document.getElementById('forgotPage').classList.add('hidden');
-            document.getElementById('dashboardPage').classList.add('hidden');
-            clearMessages();
-        }
-        
-        function showRegister() {
-            document.getElementById('loginPage').classList.add('hidden');
-            document.getElementById('registerPage').classList.remove('hidden');
-            document.getElementById('forgotPage').classList.add('hidden');
-            document.getElementById('dashboardPage').classList.add('hidden');
-            clearMessages();
-        }
-        
-        function showForgotPassword() {
-            document.getElementById('loginPage').classList.add('hidden');
-            document.getElementById('registerPage').classList.add('hidden');
-            document.getElementById('forgotPage').classList.remove('hidden');
-            document.getElementById('dashboardPage').classList.add('hidden');
-            clearMessages();
-        }
-        
-        function showDashboard() {
-            document.getElementById('loginPage').classList.add('hidden');
-            document.getElementById('registerPage').classList.add('hidden');
-            document.getElementById('forgotPage').classList.add('hidden');
-            document.getElementById('dashboardPage').classList.remove('hidden');
-            document.getElementById('userEmail').textContent = currentUser.email;
-            loadCalculations();
-        }
-        
-        // Load saved calculations
-        async function loadCalculations() {
-            if (!currentUser) return;
-            
-            try {
-                const { data, error } = await supabase
-                    .from('calculations')
-                    .select('*')
-                    .eq('user_id', currentUser.id)
-                    .order('created_at', { ascending: false });
-                
-                if (error) throw error;
-                
-                displayCalculations(data);
-            } catch (error) {
-                console.error('Load error:', error);
-            }
-        }
-        
-        function displayCalculations(calculations) {
-            const container = document.getElementById('calculationsContainer');
-            
-            if (!calculations || calculations.length === 0) {
-                container.innerHTML = `
-                    <div class="empty-state">
-                        <div class="empty-state-icon">📊</div>
-                        <h3>No calculations yet</h3>
-                        <p>Create your first retirement calculation to get started!</p>
-                    </div>
-                `;
-                return;
-            }
-            
-            const grid = document.createElement('div');
-            grid.className = 'calculations-grid';
-            
-            calculations.forEach(calc => {
-                const card = createCalculationCard(calc);
-                grid.appendChild(card);
-            });
-            
-            container.innerHTML = '';
-            container.appendChild(grid);
-        }
-        
-        function createCalculationCard(calculation) {
-            const card = document.createElement('div');
-            card.className = 'calculation-card';
-            
-            const date = new Date(calculation.created_at).toLocaleDateString();
-            const clientName = calculation.client_name || 'Unnamed';
-            const spouseName = calculation.spouse_name;
-            const totalIncome = calculation.results_data?.totalIncome || 0;
-            
-            card.innerHTML = `
-                <div class="card-header">
-                    <div class="card-title">${clientName}${spouseName ? ` & ${spouseName}` : ''}</div>
-                    <div class="card-date">${date}</div>
-                </div>
-                <div class="card-income">
-                    ${Math.round(totalIncome).toLocaleString()}/year
-                </div>
-                <div class="card-info">
-                    <p><strong>Age:</strong> ${calculation.calculation_data?.currentAge || 'N/A'}</p>
-                    <p><strong>Retirement Age:</strong> ${calculation.calculation_data?.retirementAge || 'N/A'}</p>
-                    <p><strong>Years to Retirement:</strong> ${calculation.results_data?.yearsToRetirement || 'N/A'}</p>
-                </div>
-                <div class="card-actions">
-                    <button class="btn-small btn-primary" onclick="downloadCalculationPDF(${calculation.id})">
-                        📄 Download PDF
-                    </button>
-                    <button class="btn-small btn-danger" onclick="deleteCalculation(${calculation.id})">
-                        🗑️ Delete
-                    </button>
-                </div>
-            `;
-            
-            return card;
-        }
-        
-        async function deleteCalculation(id) {
-            if (!confirm('Are you sure you want to delete this calculation?')) return;
-            
-            try {
-                const { error } = await supabase
-                    .from('calculations')
-                    .delete()
-                    .eq('id', id);
-                
-                if (error) throw error;
-                
-                loadCalculations(); // Refresh the list
-            } catch (error) {
-                console.error('Delete error:', error);
-                alert('Error deleting calculation');
-            }
-        }
-        
-        async function downloadCalculationPDF(id) {
-            try {
-                const { data, error } = await supabase
-                    .from('calculations')
-                    .select('*')
-                    .eq('id', id)
-                    .single();
-                
-                if (error) throw error;
-                
-                // Generate PDF with saved data
-                generateSavedPDF(data);
-                
-            } catch (error) {
-                console.error('PDF generation error:', error);
-                alert('Error generating PDF');
-            }
-        }
-        
-        function generateSavedPDF(savedCalculation) {
-            // This function generates PDF from saved calculation data
-            // Implementation would be similar to the calculator's generatePDF function
-            alert('PDF generation from saved data - feature coming soon!');
-        }
-        
-        // Message Handling
-        function showMessage(elementId, message, type) {
-            const element = document.getElementById(elementId);
-            element.textContent = message;
-            element.className = `message ${type}`;
-            element.style.display = 'block';
-        }
-        
-        function clearMessages() {
-            const messages = document.querySelectorAll('.message');
-            messages.forEach(msg => {
-                msg.style.display = 'none';
-                msg.textContent = '';
-            });
-        }
-        
-        // Authentication Functions
-        async function handleLogin(event) {
-            event.preventDefault();
-            
-            const email = document.getElementById('email').value;
-            const password = document.getElementById('password').value;
-            const loginBtn = document.getElementById('loginBtn');
-            
-            loginBtn.disabled = true;
-            loginBtn.textContent = 'Signing in...';
-            
-            try {
-                const { data, error } = await supabase.auth.signInWithPassword({
-                    email: email,
-                    password: password
-                });
-                
-                if (error) throw error;
-                
-                currentUser = data.user;
-                showDashboard();
-                
-            } catch (error) {
-                showMessage('loginMessage', error.message, 'error');
-            } finally {
-                loginBtn.disabled = false;
-                loginBtn.textContent = 'Sign In';
-            }
-        }
-        
-        async function handleRegister(event) {
-            event.preventDefault();
-            
-            const email = document.getElementById('regEmail').value;
-            const password = document.getElementById('regPassword').value;
-            const confirmPassword = document.getElementById('confirmPassword').value;
-            const registerBtn = document.getElementById('registerBtn');
-            
-            if (password !== confirmPassword) {
-                showMessage('registerMessage', 'Passwords do not match', 'error');
-                return;
-            }
-            
-            registerBtn.disabled = true;
-            registerBtn.textContent = 'Creating account...';
-            
-            try {
-                const { data, error } = await supabase.auth.signUp({
-                    email: email,
-                    password: password
-                });
-                
-                if (error) throw error;
-                
-                showMessage('registerMessage', 'Account created! Please check your email to verify your account.', 'success');
-                
-                setTimeout(() => {
-                    showLogin();
-                }, 3000);
-                
-            } catch (error) {
-                showMessage('registerMessage', error.message, 'error');
-            } finally {
-                registerBtn.disabled = false;
-                registerBtn.textContent = 'Create Account';
-            }
-        }
-        
-        async function handleForgotPassword(event) {
-            event.preventDefault();
-            
-            const email = document.getElementById('forgotEmail').value;
-            const forgotBtn = document.getElementById('forgotBtn');
-            
-            forgotBtn.disabled = true;
-            forgotBtn.textContent = 'Sending...';
-            
-            try {
-                const { error } = await supabase.auth.resetPasswordForEmail(email);
-                
-                if (error) throw error;
-                
-                showMessage('forgotMessage', 'Password reset email sent! Check your inbox.', 'success');
-                
-            } catch (error) {
-                showMessage('forgotMessage', error.message, 'error');
-            } finally {
-                forgotBtn.disabled = false;
-                forgotBtn.textContent = 'Send Reset Link';
-            }
-        }
-        
-        async function logout() {
-            try {
-                const { error } = await supabase.auth.signOut();
-                if (error) throw error;
-                
-                currentUser = null;
-                showLogin();
-            } catch (error) {
-                console.error('Logout error:', error);
-            }
-        }
-        
-        // Event Listeners
-        document.getElementById('loginForm').addEventListener('submit', handleLogin);
-        document.getElementById('registerForm').addEventListener('submit', handleRegister);
-        document.getElementById('forgotForm').addEventListener('submit', handleForgotPassword);
-        
-        // Initialize App
-        async function initializeApp() {
-            try {
-                const { data: { session } } = await supabase.auth.getSession();
-                
-                if (session) {
-                    currentUser = session.user;
-                    showDashboard();
-                } else {
-                    showLogin();
-                }
-                
-                // Listen for auth changes
-                supabase.auth.onAuthStateChange((event, session) => {
-                    if (event === 'SIGNED_IN' && session) {
-                        currentUser = session.user;
-                        showDashboard();
-                    } else if (event === 'SIGNED_OUT') {
-                        currentUser = null;
-                        showLogin();
-                    }
-                });
-            } catch (error) {
-                console.error('Initialization error:', error);
-                showLogin();
-            }
-        }
-        
-        // Start the app when page loads
-        window.addEventListener('DOMContentLoaded', initializeApp);
-    </script>
 </body>
 </html>
