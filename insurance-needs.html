@@ -1,0 +1,1006 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Retirement Income Calculator</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #2c3e50, #4a6741);
+            color: white;
+            padding: 30px;
+            text-align: center;
+            position: relative;
+        }
+        
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+        
+        .header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+        
+        .back-btn {
+            position: absolute;
+            top: 20px;
+            left: 30px;
+            background: rgba(255,255,255,0.2);
+            color: white;
+            border: 1px solid rgba(255,255,255,0.3);
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            text-decoration: none;
+            transition: background 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .back-btn:hover {
+            background: rgba(255,255,255,0.3);
+        }
+        
+        .content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0;
+        }
+        
+        .form-section {
+            padding: 40px;
+            border-right: 1px solid #eee;
+        }
+        
+        .results-section {
+            padding: 40px;
+            background: #f8f9fa;
+        }
+        
+        .section-title {
+            font-size: 1.5rem;
+            color: #2c3e50;
+            margin-bottom: 25px;
+            padding-bottom: 10px;
+            border-bottom: 3px solid #667eea;
+        }
+        
+        .input-group {
+            margin-bottom: 20px;
+        }
+        
+        .input-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #34495e;
+            font-size: 0.95rem;
+        }
+        
+        input, select {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e1e8ed;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.3s ease;
+        }
+        
+        input:focus, select:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+        
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin: 20px 0;
+        }
+        
+        .checkbox-group input[type="checkbox"] {
+            width: auto;
+            transform: scale(1.2);
+        }
+        
+        .spouse-section {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 20px;
+            border-left: 4px solid #667eea;
+        }
+        
+        .calculate-btn {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            border-radius: 10px;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 20px;
+            transition: transform 0.2s ease;
+        }
+        
+        .calculate-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+        }
+
+        .save-section {
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 2px solid #e1e8ed;
+        }
+
+        .save-btn {
+            background: #27ae60;
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            font-size: 1rem;
+            font-weight: 600;
+            border-radius: 10px;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 15px;
+            transition: all 0.2s ease;
+        }
+
+        .save-btn:hover {
+            background: #229954;
+            transform: translateY(-2px);
+        }
+
+        .save-btn:disabled {
+            background: #95a5a6;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .results-card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 20px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+            border-left: 5px solid #27ae60;
+        }
+        
+        .results-card h3 {
+            color: #2c3e50;
+            margin-bottom: 15px;
+            font-size: 1.3rem;
+        }
+        
+        .income-amount {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #27ae60;
+            margin-bottom: 10px;
+        }
+        
+        .breakdown {
+            display: grid;
+            gap: 10px;
+        }
+        
+        .breakdown-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .breakdown-item:last-child {
+            border-bottom: none;
+            font-weight: bold;
+            border-top: 2px solid #2c3e50;
+            padding-top: 15px;
+            margin-top: 10px;
+        }
+        
+        .pdf-btn {
+            background: linear-gradient(135deg, #e74c3c, #c0392b);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            font-size: 1rem;
+            font-weight: 600;
+            border-radius: 10px;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 20px;
+            transition: transform 0.2s ease;
+        }
+        
+        .pdf-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(231, 76, 60, 0.3);
+        }
+        
+        .pdf-btn:disabled {
+            background: #bdc3c7;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+        
+        .hidden {
+            display: none;
+        }
+
+        .alert {
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+        }
+
+        .alert-success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        
+        @media (max-width: 768px) {
+            .content {
+                grid-template-columns: 1fr;
+            }
+            
+            .form-section {
+                border-right: none;
+                border-bottom: 1px solid #eee;
+            }
+            
+            .input-row {
+                grid-template-columns: 1fr;
+            }
+            
+            .back-btn {
+                position: static;
+                margin-bottom: 20px;
+                align-self: flex-start;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <a href="dashboard.html" class="back-btn">
+                ← Back to Dashboard
+            </a>
+            <h1>Client Retirement Income Calculator</h1>
+            <p>Plan your client's financial future with confidence</p>
+        </div>
+        
+        <div class="content">
+            <div class="form-section">
+                <h2 class="section-title">Client Information</h2>
+                
+                <div class="input-group">
+                    <label for="clientName">Client Full Name</label>
+                    <input type="text" id="clientName" placeholder="Enter client's full name" required>
+                </div>
+                
+                <div class="input-row">
+                    <div class="input-group">
+                        <label for="currentAge">Current Age</label>
+                        <input type="number" id="currentAge" value="45" min="25" max="100">
+                    </div>
+                    
+                    <div class="input-group">
+                        <label for="retirementAge">Retirement Age</label>
+                        <input type="number" id="retirementAge" value="65" min="50" max="80">
+                    </div>
+                </div>
+                
+                <div class="input-group">
+                    <label for="lifeExpectancy">Life Expectancy</label>
+                    <input type="number" id="lifeExpectancy" value="85" min="65" max="100">
+                </div>
+                
+                <h3 class="section-title" style="margin-top: 30px; font-size: 1.3rem;">Current Savings</h3>
+                
+                <div class="input-row">
+                    <div class="input-group">
+                        <label for="rrsp">Current RRSP Balance ($)</label>
+                        <input type="number" id="rrsp" value="150000" min="0" step="1000">
+                    </div>
+                    
+                    <div class="input-group">
+                        <label for="tfsa">Current TFSA Balance ($)</label>
+                        <input type="number" id="tfsa" value="75000" min="0" step="1000">
+                    </div>
+                </div>
+                
+                <div class="input-row">
+                    <div class="input-group">
+                        <label for="nonReg">Non-Registered Savings ($)</label>
+                        <input type="number" id="nonReg" value="50000" min="0" step="1000">
+                    </div>
+                    
+                    <div class="input-group">
+                        <label for="pensionIncome">Annual Pension Income ($)</label>
+                        <input type="number" id="pensionIncome" value="12000" min="0" step="1000">
+                    </div>
+                </div>
+                
+                <h3 class="section-title" style="margin-top: 30px; font-size: 1.3rem;">Ongoing Contributions</h3>
+                
+                <div class="input-group">
+                    <label for="contributionFrequency">Contribution Frequency</label>
+                    <select id="contributionFrequency">
+                        <option value="monthly" selected>Monthly</option>
+                        <option value="annual">Annual</option>
+                    </select>
+                </div>
+                
+                <div class="input-row">
+                    <div class="input-group">
+                        <label for="rrspContribution" id="rrspContribLabel">RRSP Contribution (Monthly) ($)</label>
+                        <input type="number" id="rrspContribution" value="500" min="0" step="50">
+                    </div>
+                    
+                    <div class="input-group">
+                        <label for="tfsaContribution" id="tfsaContribLabel">TFSA Contribution (Monthly) ($)</label>
+                        <input type="number" id="tfsaContribution" value="300" min="0" step="50">
+                    </div>
+                </div>
+                
+                <h3 class="section-title" style="margin-top: 30px; font-size: 1.3rem;">Assumptions</h3>
+                
+                <div class="input-row">
+                    <div class="input-group">
+                        <label for="investmentReturn">Expected Annual Return (%)</label>
+                        <select id="investmentReturn">
+                            <option value="4">Conservative (4%)</option>
+                            <option value="6" selected>Moderate (6%)</option>
+                            <option value="8">Aggressive (8%)</option>
+                        </select>
+                    </div>
+                    
+                    <div class="input-group">
+                        <label for="inflationRate">Inflation Rate (%)</label>
+                        <select id="inflationRate">
+                            <option value="2" selected>Low (2%)</option>
+                            <option value="2.5">Moderate (2.5%)</option>
+                            <option value="3">High (3%)</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="input-group">
+                    <label for="govBenefits">Government Benefits (OAS + CPP) ($)</label>
+                    <input type="number" id="govBenefits" value="18000" min="0" step="1000">
+                </div>
+                
+                <div class="checkbox-group">
+                    <input type="checkbox" id="includeSpouse">
+                    <label for="includeSpouse">Include Spouse</label>
+                </div>
+                
+                <div id="spouseSection" class="spouse-section hidden">
+                    <h4 style="margin-bottom: 15px; color: #2c3e50;">Spouse Information</h4>
+                    
+                    <div class="input-group">
+                        <label for="spouseName">Spouse Full Name</label>
+                        <input type="text" id="spouseName" placeholder="Enter spouse's full name">
+                    </div>
+                    
+                    <div class="input-row">
+                        <div class="input-group">
+                            <label for="spouseAge">Spouse Current Age</label>
+                            <input type="number" id="spouseAge" value="43" min="25" max="100">
+                        </div>
+                        
+                        <div class="input-group">
+                            <label for="spouseRetirementAge">Spouse Retirement Age</label>
+                            <input type="number" id="spouseRetirementAge" value="65" min="50" max="80">
+                        </div>
+                    </div>
+                    
+                    <div class="input-row">
+                        <div class="input-group">
+                            <label for="spouseRRSP">Spouse RRSP ($)</label>
+                            <input type="number" id="spouseRRSP" value="120000" min="0" step="1000">
+                        </div>
+                        
+                        <div class="input-group">
+                            <label for="spouseTFSA">Spouse TFSA ($)</label>
+                            <input type="number" id="spouseTFSA" value="60000" min="0" step="1000">
+                        </div>
+                    </div>
+                    
+                    <div class="input-row">
+                        <div class="input-group">
+                            <label for="spouseRRSPContrib" id="spouseRRSPContribLabel">Spouse RRSP Contribution (Monthly) ($)</label>
+                            <input type="number" id="spouseRRSPContrib" value="400" min="0" step="50">
+                        </div>
+                        
+                        <div class="input-group">
+                            <label for="spouseTFSAContrib" id="spouseTFSAContribLabel">Spouse TFSA Contribution (Monthly) ($)</label>
+                            <input type="number" id="spouseTFSAContrib" value="250" min="0" step="50">
+                        </div>
+                    </div>
+                    
+                    <div class="input-row">
+                        <div class="input-group">
+                            <label for="spouseNonReg">Spouse Non-Reg ($)</label>
+                            <input type="number" id="spouseNonReg" value="30000" min="0" step="1000">
+                        </div>
+                        
+                        <div class="input-group">
+                            <label for="spousePension">Spouse Pension ($)</label>
+                            <input type="number" id="spousePension" value="8000" min="0" step="1000">
+                        </div>
+                    </div>
+                    
+                    <div class="input-group">
+                        <label for="spouseGovBenefits">Spouse Gov Benefits ($)</label>
+                        <input type="number" id="spouseGovBenefits" value="16000" min="0" step="1000">
+                    </div>
+                </div>
+                
+                <button class="calculate-btn" onclick="calculateRetirement()">
+                    Calculate Retirement Income
+                </button>
+
+                <div class="save-section" id="saveSection" style="display: none;">
+                    <div class="alert alert-success" id="calculationSuccess" style="display: none;">
+                        Calculation complete! You can now save this client plan.
+                    </div>
+                    <button type="button" class="save-btn" id="savePlan" onclick="saveCalculation()">Save Client Plan</button>
+                </div>
+            </div>
+            
+            <div class="results-section">
+                <h2 class="section-title">Retirement Plan Results</h2>
+                
+                <div id="results" class="hidden">
+                    <div class="results-card">
+                        <h3>Annual Retirement Income</h3>
+                        <div class="income-amount" id="totalIncome">$0</div>
+                        <p style="color: #7f8c8d;">Adjusted for inflation</p>
+                    </div>
+                    
+                    <div class="results-card">
+                        <h3>Income Breakdown</h3>
+                        <div class="breakdown" id="breakdown">
+                            <!-- Results will be populated here -->
+                        </div>
+                    </div>
+                    
+                    <div class="results-card">
+                        <h3>Summary</h3>
+                        <div id="summary">
+                            <!-- Summary will be populated here -->
+                        </div>
+                    </div>
+                    
+                    <button class="pdf-btn" onclick="generatePDF()" id="pdfBtn">
+                        Generate PDF Report
+                    </button>
+                </div>
+                
+                <div id="placeholder" style="text-align: center; padding: 60px 20px; color: #7f8c8d;">
+                    <div style="font-size: 4rem; margin-bottom: 20px;">📊</div>
+                    <h3 style="margin-bottom: 10px;">Ready to plan your client's future?</h3>
+                    <p>Fill out the form and click calculate to see projected retirement income.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Include jsPDF library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    
+    <script>
+        // Store calculation results globally
+        let calculationResults = null;
+        
+        // Toggle spouse section
+        document.getElementById('includeSpouse').addEventListener('change', function() {
+            const spouseSection = document.getElementById('spouseSection');
+            if (this.checked) {
+                spouseSection.classList.remove('hidden');
+            } else {
+                spouseSection.classList.add('hidden');
+            }
+        });
+        
+        // Update contribution labels based on frequency
+        document.getElementById('contributionFrequency').addEventListener('change', function() {
+            const frequency = this.value;
+            const isMonthly = frequency === 'monthly';
+            
+            document.getElementById('rrspContribLabel').textContent = 
+                `RRSP Contribution (${isMonthly ? 'Monthly' : 'Annual'}) ($)`;
+            document.getElementById('tfsaContribLabel').textContent = 
+                `TFSA Contribution (${isMonthly ? 'Monthly' : 'Annual'}) ($)`;
+            document.getElementById('spouseRRSPContribLabel').textContent = 
+                `Spouse RRSP Contribution (${isMonthly ? 'Monthly' : 'Annual'}) ($)`;
+            document.getElementById('spouseTFSAContribLabel').textContent = 
+                `Spouse TFSA Contribution (${isMonthly ? 'Monthly' : 'Annual'}) ($)`;
+        });
+        
+        function calculateRetirement() {
+            const clientName = document.getElementById('clientName').value.trim();
+            
+            if (!clientName) {
+                alert('Please enter the client name before calculating.');
+                document.getElementById('clientName').focus();
+                return;
+            }
+            
+            const currentAge = parseInt(document.getElementById('currentAge').value);
+            const retirementAge = parseInt(document.getElementById('retirementAge').value);
+            const lifeExpectancy = parseInt(document.getElementById('lifeExpectancy').value);
+            
+            const rrsp = parseFloat(document.getElementById('rrsp').value) || 0;
+            const tfsa = parseFloat(document.getElementById('tfsa').value) || 0;
+            const nonReg = parseFloat(document.getElementById('nonReg').value) || 0;
+            const pensionIncome = parseFloat(document.getElementById('pensionIncome').value) || 0;
+            const govBenefits = parseFloat(document.getElementById('govBenefits').value) || 0;
+            
+            const contributionFrequency = document.getElementById('contributionFrequency').value;
+            const isMonthly = contributionFrequency === 'monthly';
+            
+            let rrspContribution = parseFloat(document.getElementById('rrspContribution').value) || 0;
+            let tfsaContribution = parseFloat(document.getElementById('tfsaContribution').value) || 0;
+            
+            if (isMonthly) {
+                rrspContribution *= 12;
+                tfsaContribution *= 12;
+            }
+            
+            const investmentReturn = parseFloat(document.getElementById('investmentReturn').value) / 100;
+            const inflationRate = parseFloat(document.getElementById('inflationRate').value) / 100;
+            
+            const includeSpouse = document.getElementById('includeSpouse').checked;
+            
+            const yearsToRetirement = retirementAge - currentAge;
+            const yearsInRetirement = lifeExpectancy - retirementAge;
+            
+            if (yearsToRetirement <= 0) {
+                alert('Retirement age must be greater than current age');
+                return;
+            }
+            
+            const futureValueRRSP = calculateFutureValueWithContributions(rrsp, rrspContribution, investmentReturn, yearsToRetirement);
+            const futureValueTFSA = calculateFutureValueWithContributions(tfsa, tfsaContribution, investmentReturn, yearsToRetirement);
+            const futureValueNonReg = nonReg * Math.pow(1 + investmentReturn, yearsToRetirement);
+            
+            const totalFutureValue = futureValueRRSP + futureValueTFSA + futureValueNonReg;
+            
+            const withdrawalRate = 0.04;
+            const annualWithdrawalFromSavings = totalFutureValue * withdrawalRate;
+            
+            let spouseTotalFutureValue = 0;
+            let spouseWithdrawal = 0;
+            let spousePensionTotal = 0;
+            let spouseGovTotal = 0;
+            let spouseData = {};
+            
+            if (includeSpouse) {
+                const spouseName = document.getElementById('spouseName').value.trim() || 'Spouse';
+                const spouseAge = parseInt(document.getElementById('spouseAge').value);
+                const spouseRetirementAge = parseInt(document.getElementById('spouseRetirementAge').value);
+                const spouseRRSP = parseFloat(document.getElementById('spouseRRSP').value) || 0;
+                const spouseTFSA = parseFloat(document.getElementById('spouseTFSA').value) || 0;
+                const spouseNonReg = parseFloat(document.getElementById('spouseNonReg').value) || 0;
+                spousePensionTotal = parseFloat(document.getElementById('spousePension').value) || 0;
+                spouseGovTotal = parseFloat(document.getElementById('spouseGovBenefits').value) || 0;
+                
+                let spouseRRSPContrib = parseFloat(document.getElementById('spouseRRSPContrib').value) || 0;
+                let spouseTFSAContrib = parseFloat(document.getElementById('spouseTFSAContrib').value) || 0;
+                
+                if (isMonthly) {
+                    spouseRRSPContrib *= 12;
+                    spouseTFSAContrib *= 12;
+                }
+                
+                const spouseYearsToRetirement = Math.max(0, spouseRetirementAge - spouseAge);
+                
+                const spouseFutureRRSP = calculateFutureValueWithContributions(spouseRRSP, spouseRRSPContrib, investmentReturn, spouseYearsToRetirement);
+                const spouseFutureTFSA = calculateFutureValueWithContributions(spouseTFSA, spouseTFSAContrib, investmentReturn, spouseYearsToRetirement);
+                const spouseFutureNonReg = spouseNonReg * Math.pow(1 + investmentReturn, spouseYearsToRetirement);
+                
+                spouseTotalFutureValue = spouseFutureRRSP + spouseFutureTFSA + spouseFutureNonReg;
+                spouseWithdrawal = spouseTotalFutureValue * withdrawalRate;
+                
+                spouseData = {
+                    name: spouseName,
+                    age: spouseAge,
+                    retirementAge: spouseRetirementAge,
+                    currentRRSP: spouseRRSP,
+                    currentTFSA: spouseTFSA,
+                    currentNonReg: spouseNonReg,
+                    rrspContribution: spouseRRSPContrib,
+                    tfsaContribution: spouseTFSAContrib,
+                    pensionIncome: spousePensionTotal,
+                    govBenefits: spouseGovTotal,
+                    yearsToRetirement: spouseYearsToRetirement
+                };
+            }
+            
+            const totalAnnualIncome = annualWithdrawalFromSavings + spouseWithdrawal + pensionIncome + spousePensionTotal + govBenefits + spouseGovTotal;
+            const inflationAdjustedIncome = totalAnnualIncome / Math.pow(1 + inflationRate, yearsToRetirement);
+            const currentTotalSavings = rrsp + tfsa + nonReg;
+            const totalAnnualContributions = rrspContribution + tfsaContribution;
+            
+            calculationResults = {
+                inputs: {
+                    clientName,
+                    currentAge,
+                    retirementAge,
+                    lifeExpectancy,
+                    currentRRSP: rrsp,
+                    currentTFSA: tfsa,
+                    currentNonReg: nonReg,
+                    rrspContribution,
+                    tfsaContribution,
+                    pensionIncome,
+                    govBenefits,
+                    investmentReturn: investmentReturn * 100,
+                    inflationRate: inflationRate * 100,
+                    contributionFrequency,
+                    includeSpouse,
+                    spouse: spouseData
+                },
+                calculations: {
+                    totalIncome: inflationAdjustedIncome,
+                    savingsWithdrawal: annualWithdrawalFromSavings / Math.pow(1 + inflationRate, yearsToRetirement),
+                    spouseWithdrawal: spouseWithdrawal / Math.pow(1 + inflationRate, yearsToRetirement),
+                    pensionIncome: pensionIncome,
+                    spousePensionTotal: spousePensionTotal,
+                    govBenefits: govBenefits,
+                    spouseGovTotal: spouseGovTotal,
+                    yearsToRetirement: yearsToRetirement,
+                    yearsInRetirement: yearsInRetirement,
+                    futureValueSavings: totalFutureValue,
+                    spouseFutureValue: spouseTotalFutureValue,
+                    currentSavings: currentTotalSavings,
+                    totalAnnualContributions: totalAnnualContributions,
+                    isMonthly: isMonthly
+                }
+            };
+            
+            displayResults(calculationResults.calculations);
+        }
+        
+        function calculateFutureValueWithContributions(presentValue, annualContribution, rate, years) {
+            if (years <= 0) return presentValue;
+            
+            const futureValueOfPresent = presentValue * Math.pow(1 + rate, years);
+            const futureValueOfContributions = annualContribution * 
+                ((Math.pow(1 + rate, years) - 1) / rate);
+            
+            return futureValueOfPresent + futureValueOfContributions;
+        }
+        
+        function displayResults(data) {
+            document.getElementById('placeholder').classList.add('hidden');
+            document.getElementById('results').classList.remove('hidden');
+            
+            document.getElementById('totalIncome').textContent = 
+                '$' + Math.round(data.totalIncome).toLocaleString();
+            
+            const breakdown = document.getElementById('breakdown');
+            breakdown.innerHTML = '';
+            
+            const items = [
+                { label: 'Investment Withdrawals', amount: data.savingsWithdrawal }
+            ];
+            
+            if (calculationResults.inputs.includeSpouse && data.spouseWithdrawal > 0) {
+                items.push({ label: 'Spouse Investment Withdrawals', amount: data.spouseWithdrawal });
+            }
+            
+            if (data.pensionIncome > 0) {
+                items.push({ label: 'Pension Income', amount: data.pensionIncome });
+            }
+            
+            if (data.spousePensionTotal > 0) {
+                items.push({ label: 'Spouse Pension Income', amount: data.spousePensionTotal });
+            }
+            
+            if (data.govBenefits > 0) {
+                items.push({ label: 'Government Benefits', amount: data.govBenefits });
+            }
+            
+            if (data.spouseGovTotal > 0) {
+                items.push({ label: 'Spouse Government Benefits', amount: data.spouseGovTotal });
+            }
+            
+            items.forEach(item => {
+                const div = document.createElement('div');
+                div.className = 'breakdown-item';
+                div.innerHTML = `
+                    <span>${item.label}</span>
+                    <span>${Math.round(item.amount).toLocaleString()}</span>
+                `;
+                breakdown.appendChild(div);
+            });
+            
+            const totalDiv = document.createElement('div');
+            totalDiv.className = 'breakdown-item';
+            totalDiv.innerHTML = `
+                <span>Total Annual Income</span>
+                <span>${Math.round(data.totalIncome).toLocaleString()}</span>
+            `;
+            breakdown.appendChild(totalDiv);
+            
+            const summary = document.getElementById('summary');
+            const contributionDisplay = data.isMonthly ? 
+                `${Math.round(data.totalAnnualContributions / 12).toLocaleString()}/month` : 
+                `${Math.round(data.totalAnnualContributions).toLocaleString()}/year`;
+            
+            summary.innerHTML = `
+                <p><strong>Years until retirement:</strong> ${data.yearsToRetirement}</p>
+                <p><strong>Years in retirement:</strong> ${data.yearsInRetirement}</p>
+                <p><strong>Current total savings:</strong> ${data.currentSavings.toLocaleString()}</p>
+                <p><strong>Total contributions:</strong> ${contributionDisplay}</p>
+                <p><strong>Projected savings at retirement:</strong> ${Math.round(data.futureValueSavings).toLocaleString()}</p>
+                ${calculationResults.inputs.includeSpouse && data.spouseFutureValue > 0 ? 
+                    `<p><strong>Spouse projected savings:</strong> ${Math.round(data.spouseFutureValue).toLocaleString()}</p>` : ''}
+                <p style="margin-top: 15px; padding: 15px; background: #e8f5e8; border-radius: 8px; border-left: 4px solid #27ae60;">
+                    <strong>Note:</strong> All income figures are shown in today's purchasing power, adjusted for inflation. Contributions will compound over time!
+                </p>
+            `;
+
+            document.getElementById('saveSection').style.display = 'block';
+            document.getElementById('calculationSuccess').style.display = 'block';
+        }
+
+        function saveCalculation() {
+            if (!calculationResults) {
+                alert('Please calculate your retirement income first!');
+                return;
+            }
+            
+            const saveBtn = document.getElementById('savePlan');
+            saveBtn.disabled = true;
+            saveBtn.textContent = 'Saving...';
+            
+            try {
+                let plans = JSON.parse(localStorage.getItem('clientRetirementPlans') || '[]');
+                
+                const newPlan = {
+                    id: Date.now().toString(),
+                    inputs: calculationResults.inputs,
+                    calculations: calculationResults.calculations,
+                    createdDate: new Date().toISOString()
+                };
+                plans.push(newPlan);
+                
+                localStorage.setItem('clientRetirementPlans', JSON.stringify(plans));
+                
+                alert('Calculation saved successfully! You can view it in your dashboard.');
+                
+            } catch (error) {
+                console.error('Save error:', error);
+                alert('Error saving calculation: ' + error.message);
+            } finally {
+                saveBtn.disabled = false;
+                saveBtn.textContent = 'Save Client Plan';
+            }
+        }
+        
+        function generatePDF() {
+            if (!calculationResults) {
+                alert('Please calculate your retirement income first!');
+                return;
+            }
+            
+            const pdfBtn = document.getElementById('pdfBtn');
+            pdfBtn.disabled = true;
+            pdfBtn.textContent = 'Generating PDF...';
+            
+            try {
+                const { jsPDF } = window.jspdf;
+                const doc = new jsPDF();
+                
+                const pageWidth = doc.internal.pageSize.width;
+                const pageHeight = doc.internal.pageSize.height;
+                let yPosition = 20;
+                
+                function addText(text, x, y, maxWidth = pageWidth - 40) {
+                    const lines = doc.splitTextToSize(text, maxWidth);
+                    doc.text(lines, x, y);
+                    return y + (lines.length * 6);
+                }
+                
+                function checkNewPage(neededSpace = 20) {
+                    if (yPosition + neededSpace > pageHeight - 20) {
+                        doc.addPage();
+                        yPosition = 20;
+                        return true;
+                    }
+                    return false;
+                }
+                
+                doc.setFontSize(20);
+                doc.setFont(undefined, 'bold');
+                yPosition = addText('Retirement Income Calculation Report', 20, yPosition);
+                yPosition += 5;
+                
+                doc.setFontSize(16);
+                doc.setFont(undefined, 'normal');
+                const inputs = calculationResults.inputs;
+                if (inputs.includeSpouse && inputs.spouse.name) {
+                    yPosition = addText(`Prepared for: ${inputs.clientName} & ${inputs.spouse.name}`, 20, yPosition);
+                } else {
+                    yPosition = addText(`Prepared for: ${inputs.clientName}`, 20, yPosition);
+                }
+                yPosition += 10;
+                
+                doc.setFontSize(12);
+                const today = new Date().toLocaleDateString();
+                yPosition = addText(`Generated on: ${today}`, 20, yPosition);
+                yPosition += 15;
+                
+                checkNewPage(40);
+                doc.setFontSize(16);
+                doc.setFont(undefined, 'bold');
+                yPosition = addText('Personal Information', 20, yPosition);
+                yPosition += 5;
+                
+                doc.setFontSize(11);
+                doc.setFont(undefined, 'normal');
+                yPosition = addText(`Client Name: ${inputs.clientName}`, 20, yPosition);
+                yPosition = addText(`Current Age: ${inputs.currentAge}`, 20, yPosition);
+                yPosition = addText(`Retirement Age: ${inputs.retirementAge}`, 20, yPosition);
+                yPosition = addText(`Life Expectancy: ${inputs.lifeExpectancy}`, 20, yPosition);
+                yPosition = addText(`Years to Retirement: ${calculationResults.calculations.yearsToRetirement}`, 20, yPosition);
+                yPosition = addText(`Years in Retirement: ${calculationResults.calculations.yearsInRetirement}`, 20, yPosition);
+                yPosition += 10;
+                
+                checkNewPage(50);
+                doc.setFontSize(16);
+                doc.setFont(undefined, 'bold');
+                yPosition = addText('Current Savings', 20, yPosition);
+                yPosition += 5;
+                
+                doc.setFontSize(11);
+                doc.setFont(undefined, 'normal');
+                yPosition = addText(`RRSP Balance: ${inputs.currentRRSP.toLocaleString()}`, 20, yPosition);
+                yPosition = addText(`TFSA Balance: ${inputs.currentTFSA.toLocaleString()}`, 20, yPosition);
+                yPosition = addText(`Non-Registered Savings: ${inputs.currentNonReg.toLocaleString()}`, 20, yPosition);
+                yPosition = addText(`Total Current Savings: ${calculationResults.calculations.currentSavings.toLocaleString()}`, 20, yPosition);
+                yPosition += 10;
+                
+                checkNewPage(60);
+                doc.setFontSize(18);
+                doc.setFont(undefined, 'bold');
+                yPosition = addText('RETIREMENT INCOME PROJECTION', 20, yPosition);
+                yPosition += 10;
+                
+                doc.setFillColor(240, 248, 255);
+                doc.rect(15, yPosition - 5, pageWidth - 30, 25, 'F');
+                
+                doc.setFontSize(16);
+                doc.setFont(undefined, 'bold');
+                yPosition = addText(`Total Annual Retirement Income: ${Math.round(calculationResults.calculations.totalIncome).toLocaleString()}`, 20, yPosition);
+                doc.setFontSize(10);
+                doc.setFont(undefined, 'italic');
+                yPosition = addText('(Adjusted for inflation - in today\'s purchasing power)', 20, yPosition + 5);
+                yPosition += 15;
+                
+                doc.setFontSize(14);
+                doc.setFont(undefined, 'bold');
+                yPosition = addText('Income Breakdown:', 20, yPosition);
+                yPosition += 5;
+                
+                doc.setFontSize(11);
+                doc.setFont(undefined, 'normal');
+                const calc = calculationResults.calculations;
+                
+                yPosition = addText(`• Investment Withdrawals: ${Math.round(calc.savingsWithdrawal).toLocaleString()}`, 25, yPosition);
+                
+                if (inputs.includeSpouse && calc.spouseWithdrawal > 0) {
+                    yPosition = addText(`• Spouse Investment Withdrawals: ${Math.round(calc.spouseWithdrawal).toLocaleString()}`, 25, yPosition);
+                }
+                
+                if (calc.pensionIncome > 0) {
+                    yPosition = addText(`• Pension Income: ${Math.round(calc.pensionIncome).toLocaleString()}`, 25, yPosition);
+                }
+                
+                if (calc.spousePensionTotal > 0) {
+                    yPosition = addText(`• Spouse Pension Income: ${Math.round(calc.spousePensionTotal).toLocaleString()}`, 25, yPosition);
+                }
+                
+                if (calc.govBenefits > 0) {
+                    yPosition = addText(`• Government Benefits (OAS + CPP): ${Math.round(calc.govBenefits).toLocaleString()}`, 25, yPosition);
+                }
+                
+                if (calc.spouseGovTotal > 0) {
+                    yPosition = addText(`• Spouse Government Benefits: ${Math.round(calc.spouseGovTotal).toLocaleString()}`, 25, yPosition);
+                }
+                
+                yPosition += 15;
+                
+                checkNewPage(50);
+                doc.setFontSize(14);
+                doc.setFont(undefined, 'bold');
+                yPosition = addText('Important Notes & Assumptions:', 20, yPosition);
+                yPosition += 5;
+                
+                doc.setFontSize(10);
+                doc.setFont(undefined, 'normal');
+                const notes = [
+                    '• This calculation uses the 4% Safe Withdrawal Rate, a commonly accepted rule for retirement planning.',
+                    '• All dollar amounts are adjusted for inflation and represent today\'s purchasing power.',
+                    '• Investment returns are assumed to be consistent year-over-year, though actual returns will vary.',
+                    '• Government benefit amounts (OAS/CPP) should be verified with official sources.',
+                    '• This projection assumes you continue contributing at the specified rate until retirement.',
+                    '• Tax implications are not fully accounted for in this basic calculation.',
+                    '• Consider consulting with a financial advisor for personalized retirement planning.'
+                ];
+                
+                notes.forEach(note => {
+                    yPosition = addText(note, 20, yPosition);
+                    yPosition += 2;
+                });
+                
+                checkNewPage(30);
+                yPosition = pageHeight - 40;
+                doc.setFontSize(8);
+                doc.setFont(undefined, 'italic');
+                doc.text('This report is for informational purposes only and should not be considered as financial advice.', 20, yPosition);
+                doc.text('Generated by Retirement Income Calculator', 20, yPosition + 8);
+                doc.text(`Report Date: ${today}`, 20, yPosition + 16);
+                
+                const fileName = inputs.includeSpouse && inputs.spouse.name ? 
+                    `${inputs.clientName}_${inputs.spouse.name}_Retirement_Report.pdf` :
+                    `${inputs.clientName}_Retirement_Report.pdf`;
+                    
+                doc.save(fileName);
+                
+            } catch (error) {
+                console.error('Error generating PDF:', error);
+                alert('There was an error generating the PDF. Please try again.');
+            } finally {
+                pdfBtn.disabled = false;
+                pdfBtn.textContent = 'Generate PDF Report';
+            }
+        }
+    </script>
+</body>
+</html>
