@@ -11,6 +11,46 @@
             box-sizing: border-box;
         }
         
+        // Save calculation to Supabase
+        async function saveCalculation() {
+            if (!calculationResults) {
+                alert('Please calculate your retirement income first!');
+                return;
+            }
+            
+            if (!currentUser) {
+                alert('Please log in to save calculations');
+                return;
+            }
+            
+            const saveBtn = document.getElementById('saveBtn');
+            saveBtn.disabled = true;
+            saveBtn.textContent = 'Saving...';
+            
+            try {
+                const { data, error } = await supabase
+                    .from('calculations')
+                    .insert([{
+                        user_id: currentUser.id,
+                        client_name: calculationResults.inputs.clientName,
+                        spouse_name: calculationResults.inputs.spouse?.name || null,
+                        calculation_data: calculationResults.inputs,
+                        results_data: calculationResults.calculations
+                    }]);
+                
+                if (error) throw error;
+                
+                alert('Calculation saved successfully! You can view it in your dashboard.');
+                
+            } catch (error) {
+                console.error('Save error:', error);
+                alert('Error saving calculation: ' + error.message);
+            } finally {
+                saveBtn.disabled = false;
+                saveBtn.textContent = '💾 Save Calculation';
+            }
+        }
+        
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
