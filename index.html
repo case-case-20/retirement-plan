@@ -145,25 +145,14 @@
             display: none;
         }
         
-        /* Register Form Styles */
-        .register-container {
-            background: white;
-            border-radius: 20px;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
-            padding: 60px 50px;
-            max-width: 400px;
-            width: 100%;
-            text-align: center;
-        }
-        
         /* Dashboard Styles */
         .dashboard-container {
             background: white;
             border-radius: 20px;
             box-shadow: 0 20px 40px rgba(0,0,0,0.1);
-            max-width: 1200px;
+            max-width: 800px;
             width: 100%;
-            min-height: 80vh;
+            min-height: 60vh;
         }
         
         .dashboard-header {
@@ -225,6 +214,7 @@
             transition: transform 0.2s ease;
             text-decoration: none;
             display: inline-block;
+            margin: 10px;
         }
         
         .calculator-btn:hover {
@@ -233,7 +223,7 @@
         }
         
         @media (max-width: 768px) {
-            .login-container, .register-container {
+            .login-container {
                 padding: 40px 30px;
             }
             
@@ -282,7 +272,7 @@
     </div>
     
     <!-- Register Page -->
-    <div id="registerPage" class="register-container hidden">
+    <div id="registerPage" class="login-container hidden">
         <div class="logo">🏖️</div>
         <h1 class="title">Create Account</h1>
         <p class="subtitle">Start planning your retirement today</p>
@@ -316,7 +306,7 @@
     </div>
     
     <!-- Forgot Password Page -->
-    <div id="forgotPage" class="register-container hidden">
+    <div id="forgotPage" class="login-container hidden">
         <div class="logo">🏖️</div>
         <h1 class="title">Reset Password</h1>
         <p class="subtitle">Enter your email to receive reset instructions</p>
@@ -353,7 +343,7 @@
             <p style="color: #7f8c8d; margin-bottom: 40px; font-size: 1.1rem;">
                 Calculate your retirement income and plan for your financial future.
             </p>
-            <a href="#" class="calculator-btn" onclick="openCalculator()">
+            <a href="calculator.html" class="calculator-btn">
                 📊 Start Retirement Calculator
             </a>
         </div>
@@ -521,11 +511,6 @@
             } catch (error) {
                 console.error('Logout error:', error);
             }
-        }
-        
-        function openCalculator() {
-            // For now, just show an alert. You can replace this with your calculator
-            alert('Calculator will open here! You can integrate your existing calculator or create a new one.');
         }
         
         // Event Listeners
