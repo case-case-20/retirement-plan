@@ -726,4 +726,281 @@
             breakdown.innerHTML = '';
             
             const items = [
-                { label: 'Investment
+                { label: 'Investment Withdrawals', amount: data.savingsWithdrawal }
+            ];
+            
+            if (calculationResults.inputs.includeSpouse && data.spouseWithdrawal > 0) {
+                items.push({ label: 'Spouse Investment Withdrawals', amount: data.spouseWithdrawal });
+            }
+            
+            if (data.pensionIncome > 0) {
+                items.push({ label: 'Pension Income', amount: data.pensionIncome });
+            }
+            
+            if (data.spousePensionTotal > 0) {
+                items.push({ label: 'Spouse Pension Income', amount: data.spousePensionTotal });
+            }
+            
+            if (data.govBenefits > 0) {
+                items.push({ label: 'Government Benefits', amount: data.govBenefits });
+            }
+            
+            if (data.spouseGovTotal > 0) {
+                items.push({ label: 'Spouse Government Benefits', amount: data.spouseGovTotal });
+            }
+            
+            items.forEach(item => {
+                const div = document.createElement('div');
+                div.className = 'breakdown-item';
+                div.innerHTML = `
+                    <span>${item.label}</span>
+                    <span>${Math.round(item.amount).toLocaleString()}</span>
+                `;
+                breakdown.appendChild(div);
+            });
+            
+            const totalDiv = document.createElement('div');
+            totalDiv.className = 'breakdown-item';
+            totalDiv.innerHTML = `
+                <span>Total Annual Income</span>
+                <span>${Math.round(data.totalIncome).toLocaleString()}</span>
+            `;
+            breakdown.appendChild(totalDiv);
+            
+            const summary = document.getElementById('summary');
+            const contributionDisplay = data.isMonthly ? 
+                `${Math.round(data.totalAnnualContributions / 12).toLocaleString()}/month` : 
+                `${Math.round(data.totalAnnualContributions).toLocaleString()}/year`;
+            
+            summary.innerHTML = `
+                <p><strong>Years until retirement:</strong> ${data.yearsToRetirement}</p>
+                <p><strong>Years in retirement:</strong> ${data.yearsInRetirement}</p>
+                <p><strong>Current total savings:</strong> ${data.currentSavings.toLocaleString()}</p>
+                <p><strong>Total contributions:</strong> ${contributionDisplay}</p>
+                <p><strong>Projected savings at retirement:</strong> ${Math.round(data.futureValueSavings).toLocaleString()}</p>
+                ${calculationResults.inputs.includeSpouse && data.spouseFutureValue > 0 ? 
+                    `<p><strong>Spouse projected savings:</strong> ${Math.round(data.spouseFutureValue).toLocaleString()}</p>` : ''}
+                <p style="margin-top: 15px; padding: 15px; background: #e8f5e8; border-radius: 8px; border-left: 4px solid #27ae60;">
+                    <strong>Note:</strong> All income figures are shown in today's purchasing power, adjusted for inflation. Contributions will compound over time!
+                </p>
+            `;
+
+            document.getElementById('saveSection').style.display = 'block';
+            document.getElementById('calculationSuccess').style.display = 'block';
+        }
+
+        function saveCalculation() {
+            if (!calculationResults) {
+                alert('Please calculate your retirement income first!');
+                return;
+            }
+            
+            const saveBtn = document.getElementById('savePlan');
+            saveBtn.disabled = true;
+            saveBtn.textContent = 'Saving...';
+            
+            try {
+                let plans = JSON.parse(localStorage.getItem('clientRetirementPlans') || '[]');
+                
+                const newPlan = {
+                    id: Date.now().toString(),
+                    inputs: calculationResults.inputs,
+                    calculations: calculationResults.calculations,
+                    createdDate: new Date().toISOString()
+                };
+                plans.push(newPlan);
+                
+                localStorage.setItem('clientRetirementPlans', JSON.stringify(plans));
+                
+                alert('Calculation saved successfully! You can view it in your dashboard.');
+                
+            } catch (error) {
+                console.error('Save error:', error);
+                alert('Error saving calculation: ' + error.message);
+            } finally {
+                saveBtn.disabled = false;
+                saveBtn.textContent = 'Save Client Plan';
+            }
+        }
+        
+        function generatePDF() {
+            if (!calculationResults) {
+                alert('Please calculate your retirement income first!');
+                return;
+            }
+            
+            const pdfBtn = document.getElementById('pdfBtn');
+            pdfBtn.disabled = true;
+            pdfBtn.textContent = 'Generating PDF...';
+            
+            try {
+                const { jsPDF } = window.jspdf;
+                const doc = new jsPDF();
+                
+                const pageWidth = doc.internal.pageSize.width;
+                const pageHeight = doc.internal.pageSize.height;
+                let yPosition = 20;
+                
+                function addText(text, x, y, maxWidth = pageWidth - 40) {
+                    const lines = doc.splitTextToSize(text, maxWidth);
+                    doc.text(lines, x, y);
+                    return y + (lines.length * 6);
+                }
+                
+                function checkNewPage(neededSpace = 20) {
+                    if (yPosition + neededSpace > pageHeight - 20) {
+                        doc.addPage();
+                        yPosition = 20;
+                        return true;
+                    }
+                    return false;
+                }
+                
+                doc.setFontSize(20);
+                doc.setFont(undefined, 'bold');
+                yPosition = addText('Retirement Income Calculation Report', 20, yPosition);
+                yPosition += 5;
+                
+                doc.setFontSize(16);
+                doc.setFont(undefined, 'normal');
+                const inputs = calculationResults.inputs;
+                if (inputs.includeSpouse && inputs.spouse.name) {
+                    yPosition = addText(`Prepared for: ${inputs.clientName} & ${inputs.spouse.name}`, 20, yPosition);
+                } else {
+                    yPosition = addText(`Prepared for: ${inputs.clientName}`, 20, yPosition);
+                }
+                yPosition += 10;
+                
+                doc.setFontSize(12);
+                const today = new Date().toLocaleDateString();
+                yPosition = addText(`Generated on: ${today}`, 20, yPosition);
+                yPosition += 15;
+                
+                checkNewPage(40);
+                doc.setFontSize(16);
+                doc.setFont(undefined, 'bold');
+                yPosition = addText('Personal Information', 20, yPosition);
+                yPosition += 5;
+                
+                doc.setFontSize(11);
+                doc.setFont(undefined, 'normal');
+                yPosition = addText(`Client Name: ${inputs.clientName}`, 20, yPosition);
+                yPosition = addText(`Current Age: ${inputs.currentAge}`, 20, yPosition);
+                yPosition = addText(`Retirement Age: ${inputs.retirementAge}`, 20, yPosition);
+                yPosition = addText(`Life Expectancy: ${inputs.lifeExpectancy}`, 20, yPosition);
+                yPosition = addText(`Years to Retirement: ${calculationResults.calculations.yearsToRetirement}`, 20, yPosition);
+                yPosition = addText(`Years in Retirement: ${calculationResults.calculations.yearsInRetirement}`, 20, yPosition);
+                yPosition += 10;
+                
+                checkNewPage(50);
+                doc.setFontSize(16);
+                doc.setFont(undefined, 'bold');
+                yPosition = addText('Current Savings', 20, yPosition);
+                yPosition += 5;
+                
+                doc.setFontSize(11);
+                doc.setFont(undefined, 'normal');
+                yPosition = addText(`RRSP Balance: ${inputs.currentRRSP.toLocaleString()}`, 20, yPosition);
+                yPosition = addText(`TFSA Balance: ${inputs.currentTFSA.toLocaleString()}`, 20, yPosition);
+                yPosition = addText(`Non-Registered Savings: ${inputs.currentNonReg.toLocaleString()}`, 20, yPosition);
+                yPosition = addText(`Total Current Savings: ${calculationResults.calculations.currentSavings.toLocaleString()}`, 20, yPosition);
+                yPosition += 10;
+                
+                checkNewPage(60);
+                doc.setFontSize(18);
+                doc.setFont(undefined, 'bold');
+                yPosition = addText('RETIREMENT INCOME PROJECTION', 20, yPosition);
+                yPosition += 10;
+                
+                doc.setFillColor(240, 248, 255);
+                doc.rect(15, yPosition - 5, pageWidth - 30, 25, 'F');
+                
+                doc.setFontSize(16);
+                doc.setFont(undefined, 'bold');
+                yPosition = addText(`Total Annual Retirement Income: ${Math.round(calculationResults.calculations.totalIncome).toLocaleString()}`, 20, yPosition);
+                doc.setFontSize(10);
+                doc.setFont(undefined, 'italic');
+                yPosition = addText('(Adjusted for inflation - in today\'s purchasing power)', 20, yPosition + 5);
+                yPosition += 15;
+                
+                doc.setFontSize(14);
+                doc.setFont(undefined, 'bold');
+                yPosition = addText('Income Breakdown:', 20, yPosition);
+                yPosition += 5;
+                
+                doc.setFontSize(11);
+                doc.setFont(undefined, 'normal');
+                const calc = calculationResults.calculations;
+                
+                yPosition = addText(`• Investment Withdrawals: ${Math.round(calc.savingsWithdrawal).toLocaleString()}`, 25, yPosition);
+                
+                if (inputs.includeSpouse && calc.spouseWithdrawal > 0) {
+                    yPosition = addText(`• Spouse Investment Withdrawals: ${Math.round(calc.spouseWithdrawal).toLocaleString()}`, 25, yPosition);
+                }
+                
+                if (calc.pensionIncome > 0) {
+                    yPosition = addText(`• Pension Income: ${Math.round(calc.pensionIncome).toLocaleString()}`, 25, yPosition);
+                }
+                
+                if (calc.spousePensionTotal > 0) {
+                    yPosition = addText(`• Spouse Pension Income: ${Math.round(calc.spousePensionTotal).toLocaleString()}`, 25, yPosition);
+                }
+                
+                if (calc.govBenefits > 0) {
+                    yPosition = addText(`• Government Benefits (OAS + CPP): ${Math.round(calc.govBenefits).toLocaleString()}`, 25, yPosition);
+                }
+                
+                if (calc.spouseGovTotal > 0) {
+                    yPosition = addText(`• Spouse Government Benefits: ${Math.round(calc.spouseGovTotal).toLocaleString()}`, 25, yPosition);
+                }
+                
+                yPosition += 15;
+                
+                checkNewPage(50);
+                doc.setFontSize(14);
+                doc.setFont(undefined, 'bold');
+                yPosition = addText('Important Notes & Assumptions:', 20, yPosition);
+                yPosition += 5;
+                
+                doc.setFontSize(10);
+                doc.setFont(undefined, 'normal');
+                const notes = [
+                    '• This calculation uses the 4% Safe Withdrawal Rate, a commonly accepted rule for retirement planning.',
+                    '• All dollar amounts are adjusted for inflation and represent today\'s purchasing power.',
+                    '• Investment returns are assumed to be consistent year-over-year, though actual returns will vary.',
+                    '• Government benefit amounts (OAS/CPP) should be verified with official sources.',
+                    '• This projection assumes you continue contributing at the specified rate until retirement.',
+                    '• Tax implications are not fully accounted for in this basic calculation.',
+                    '• Consider consulting with a financial advisor for personalized retirement planning.'
+                ];
+                
+                notes.forEach(note => {
+                    yPosition = addText(note, 20, yPosition);
+                    yPosition += 2;
+                });
+                
+                checkNewPage(30);
+                yPosition = pageHeight - 40;
+                doc.setFontSize(8);
+                doc.setFont(undefined, 'italic');
+                doc.text('This report is for informational purposes only and should not be considered as financial advice.', 20, yPosition);
+                doc.text('Generated by Retirement Income Calculator', 20, yPosition + 8);
+                doc.text(`Report Date: ${today}`, 20, yPosition + 16);
+                
+                const fileName = inputs.includeSpouse && inputs.spouse.name ? 
+                    `${inputs.clientName}_${inputs.spouse.name}_Retirement_Report.pdf` :
+                    `${inputs.clientName}_Retirement_Report.pdf`;
+                    
+                doc.save(fileName);
+                
+            } catch (error) {
+                console.error('Error generating PDF:', error);
+                alert('There was an error generating the PDF. Please try again.');
+            } finally {
+                pdfBtn.disabled = false;
+                pdfBtn.textContent = 'Generate PDF Report';
+            }
+        }
+    </script>
+</body>
+</html>
