@@ -802,24 +802,47 @@
             try {
                 let plans = JSON.parse(localStorage.getItem('clientRetirementPlans') || '[]');
                 
-                const newPlan = {
-                    id: Date.now().toString(),
-                    inputs: calculationResults.inputs,
-                    calculations: calculationResults.calculations,
-                    createdDate: new Date().toISOString()
-                };
-                plans.push(newPlan);
+                if (isEditing && editingId) {
+                    // Update existing plan
+                    const index = plans.findIndex(plan => plan.id === editingId);
+                    if (index !== -1) {
+                        plans[index] = {
+                            ...plans[index],
+                            type: 'retirement',
+                            inputs: calculationResults.inputs,
+                            calculations: calculationResults.calculations,
+                            updatedDate: new Date().toISOString()
+                        };
+                    }
+                } else {
+                    // Add new plan
+                    const newPlan = {
+                        id: Date.now().toString(),
+                        type: 'retirement',
+                        inputs: calculationResults.inputs,
+                        calculations: calculationResults.calculations,
+                        createdDate: new Date().toISOString()
+                    };
+                    plans.push(newPlan);
+                }
                 
                 localStorage.setItem('clientRetirementPlans', JSON.stringify(plans));
                 
                 alert('Calculation saved successfully! You can view it in your dashboard.');
+                
+                // Optional redirect to dashboard
+                setTimeout(() => {
+                    if (confirm('Would you like to return to the dashboard to view all client documents?')) {
+                        window.location.href = 'dashboard.html';
+                    }
+                }, 1000);
                 
             } catch (error) {
                 console.error('Save error:', error);
                 alert('Error saving calculation: ' + error.message);
             } finally {
                 saveBtn.disabled = false;
-                saveBtn.textContent = 'Save Client Plan';
+                saveBtn.textContent = isEditing ? 'Update Client Plan' : 'Save Client Plan';
             }
         }
         
