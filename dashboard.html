@@ -1,0 +1,748 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Client Retirement Plans Dashboard</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #2c3e50, #4a6741);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .nav-buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        .btn {
+            background: rgba(255,255,255,0.2);
+            color: white;
+            border: 2px solid rgba(255,255,255,0.3);
+            padding: 10px 20px;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .btn:hover {
+            background: rgba(255,255,255,0.3);
+            transform: translateY(-2px);
+        }
+
+        .btn.primary {
+            background: #e74c3c;
+            border-color: #e74c3c;
+        }
+
+        .btn.primary:hover {
+            background: #c0392b;
+            border-color: #c0392b;
+        }
+
+        .dashboard-content {
+            padding: 30px;
+        }
+
+        .controls-section {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .search-filter {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .search-input {
+            padding: 10px 15px;
+            border: 2px solid #e1e5e9;
+            border-radius: 8px;
+            font-size: 14px;
+            min-width: 200px;
+        }
+
+        .filter-select {
+            padding: 10px 15px;
+            border: 2px solid #e1e5e9;
+            border-radius: 8px;
+            font-size: 14px;
+            background: white;
+            cursor: pointer;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, #2c3e50, #4a6741);
+            color: white;
+            padding: 25px;
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .stat-card h3 {
+            font-size: 1.2em;
+            margin-bottom: 10px;
+            opacity: 0.9;
+        }
+
+        .stat-card .value {
+            font-size: 2.2em;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .plans-section {
+            background: #f8f9fa;
+            padding: 30px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+        }
+
+        .plans-section h2 {
+            color: #333;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .plan-card {
+            background: white;
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 20px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            border-left: 5px solid #27ae60;
+        }
+
+        .plan-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 20px rgba(0,0,0,0.15);
+        }
+
+        .plan-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 15px;
+        }
+
+        .client-info {
+            flex: 1;
+        }
+
+        .client-name {
+            font-size: 1.4em;
+            color: #2c3e50;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .plan-meta {
+            color: #666;
+            font-size: 0.9em;
+        }
+
+        .income-highlight {
+            text-align: right;
+            color: #27ae60;
+            font-weight: bold;
+        }
+
+        .annual-income {
+            font-size: 1.8em;
+            margin-bottom: 5px;
+        }
+
+        .income-label {
+            font-size: 0.9em;
+            opacity: 0.8;
+        }
+
+        .plan-details {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .detail-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid #eee;
+        }
+
+        .detail-label {
+            color: #666;
+            font-weight: 500;
+        }
+
+        .detail-value {
+            color: #333;
+            font-weight: 600;
+        }
+
+        .plan-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .action-btn {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.9em;
+            transition: all 0.2s ease;
+        }
+
+        .edit-btn {
+            background: #3498db;
+            color: white;
+        }
+
+        .edit-btn:hover {
+            background: #2980b9;
+        }
+
+        .delete-btn {
+            background: #e74c3c;
+            color: white;
+        }
+
+        .delete-btn:hover {
+            background: #c0392b;
+        }
+
+        .pdf-btn {
+            background: #f39c12;
+            color: white;
+        }
+
+        .pdf-btn:hover {
+            background: #e67e22;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 50px 20px;
+            color: #666;
+        }
+
+        .empty-state h3 {
+            margin-bottom: 15px;
+            color: #333;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+        }
+
+        .modal-content {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            max-width: 500px;
+            width: 90%;
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            font-size: 24px;
+            cursor: pointer;
+            color: #666;
+        }
+
+        .no-results {
+            text-align: center;
+            padding: 40px;
+            color: #666;
+            background: white;
+            border-radius: 12px;
+            margin: 20px 0;
+        }
+
+        @media (max-width: 768px) {
+            .controls-section {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .search-filter {
+                justify-content: space-between;
+            }
+
+            .search-input {
+                min-width: auto;
+                flex: 1;
+            }
+
+            .plan-header {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .income-highlight {
+                text-align: left;
+            }
+
+            .plan-details {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Client Retirement Plans Dashboard</h1>
+            <p>Manage and track your clients' retirement planning progress</p>
+            <div class="nav-buttons">
+                <a href="calculator.html" class="btn primary">New Client Plan</a>
+                <a href="#" class="btn" onclick="exportData()">Export Data</a>
+                <a href="#" class="btn" onclick="importData()">Import Data</a>
+                <a href="index.html" class="btn">Home</a>
+            </div>
+        </div>
+
+        <div class="dashboard-content">
+            <!-- Controls -->
+            <div class="controls-section">
+                <div class="search-filter">
+                    <input type="text" class="search-input" id="searchInput" placeholder="Search by client name...">
+                    <select class="filter-select" id="sortFilter">
+                        <option value="date-desc">Newest First</option>
+                        <option value="date-asc">Oldest First</option>
+                        <option value="client-asc">Client Name A-Z</option>
+                        <option value="client-desc">Client Name Z-A</option>
+                        <option value="income-desc">Highest Income</option>
+                        <option value="income-asc">Lowest Income</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Stats Overview -->
+            <div class="stats-grid" id="statsGrid">
+                <div class="stat-card">
+                    <h3>Total Clients</h3>
+                    <div class="value" id="totalClients">0</div>
+                </div>
+                <div class="stat-card">
+                    <h3>Avg. Annual Income</h3>
+                    <div class="value" id="avgAnnualIncome">$0</div>
+                </div>
+                <div class="stat-card">
+                    <h3>Total Projected Savings</h3>
+                    <div class="value" id="totalProjectedSavings">$0</div>
+                </div>
+                <div class="stat-card">
+                    <h3>Latest Plan</h3>
+                    <div class="value" id="latestPlanDate">-</div>
+                </div>
+            </div>
+
+            <!-- Client Plans -->
+            <div class="plans-section">
+                <h2>Client Retirement Plans</h2>
+                <div id="plansContainer">
+                    <div class="empty-state">
+                        <h3>No client plans saved yet</h3>
+                        <p>Create your first client retirement plan to get started!</p>
+                        <a href="calculator.html" class="btn primary" style="margin-top: 15px; display: inline-block;">Create First Plan</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Delete Confirmation Modal -->
+    <div id="deleteModal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeDeleteModal()">&times;</span>
+            <h3>Confirm Delete</h3>
+            <p>Are you sure you want to delete this client's retirement plan? This action cannot be undone.</p>
+            <div style="margin-top: 20px; display: flex; gap: 10px; justify-content: flex-end;">
+                <button class="action-btn" onclick="closeDeleteModal()">Cancel</button>
+                <button class="action-btn delete-btn" onclick="confirmDelete()">Delete</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        class ClientPlanManager {
+            constructor() {
+                this.plans = this.loadPlans();
+                this.filteredPlans = [...this.plans];
+                this.init();
+            }
+
+            init() {
+                this.setupEventListeners();
+                this.renderStats();
+                this.renderPlans();
+            }
+
+            setupEventListeners() {
+                document.getElementById('searchInput').addEventListener('input', (e) => {
+                    this.handleSearch(e.target.value);
+                });
+
+                document.getElementById('sortFilter').addEventListener('change', (e) => {
+                    this.handleSort(e.target.value);
+                });
+            }
+
+            loadPlans() {
+                const saved = localStorage.getItem('clientRetirementPlans');
+                return saved ? JSON.parse(saved) : [];
+            }
+
+            savePlans() {
+                localStorage.setItem('clientRetirementPlans', JSON.stringify(this.plans));
+            }
+
+            addPlan(planData) {
+                const plan = {
+                    id: Date.now().toString(),
+                    createdDate: new Date().toISOString(),
+                    ...planData
+                };
+                this.plans.push(plan);
+                this.savePlans();
+                this.updateDisplay();
+                return plan.id;
+            }
+
+            deletePlan(planId) {
+                this.plans = this.plans.filter(plan => plan.id !== planId);
+                this.savePlans();
+                this.updateDisplay();
+            }
+
+            getPlan(planId) {
+                return this.plans.find(plan => plan.id === planId);
+            }
+
+            handleSearch(searchTerm) {
+                if (!searchTerm.trim()) {
+                    this.filteredPlans = [...this.plans];
+                } else {
+                    const term = searchTerm.toLowerCase();
+                    this.filteredPlans = this.plans.filter(plan => {
+                        const clientName = plan.inputs?.clientName?.toLowerCase() || '';
+                        const spouseName = plan.inputs?.spouse?.name?.toLowerCase() || '';
+                        return clientName.includes(term) || spouseName.includes(term);
+                    });
+                }
+                this.applySorting();
+                this.renderPlans();
+            }
+
+            handleSort(sortType) {
+                this.applySorting(sortType);
+                this.renderPlans();
+            }
+
+            applySorting(sortType = null) {
+                if (!sortType) {
+                    sortType = document.getElementById('sortFilter').value;
+                }
+
+                this.filteredPlans.sort((a, b) => {
+                    switch (sortType) {
+                        case 'date-desc':
+                            return new Date(b.createdDate) - new Date(a.createdDate);
+                        case 'date-asc':
+                            return new Date(a.createdDate) - new Date(b.createdDate);
+                        case 'client-asc':
+                            return (a.inputs?.clientName || '').localeCompare(b.inputs?.clientName || '');
+                        case 'client-desc':
+                            return (b.inputs?.clientName || '').localeCompare(a.inputs?.clientName || '');
+                        case 'income-desc':
+                            return (b.calculations?.totalIncome || 0) - (a.calculations?.totalIncome || 0);
+                        case 'income-asc':
+                            return (a.calculations?.totalIncome || 0) - (b.calculations?.totalIncome || 0);
+                        default:
+                            return 0;
+                    }
+                });
+            }
+
+            updateDisplay() {
+                this.filteredPlans = [...this.plans];
+                this.applySorting();
+                this.renderStats();
+                this.renderPlans();
+            }
+
+            renderStats() {
+                const totalClients = this.plans.length;
+                const avgIncome = totalClients > 0 
+                    ? this.plans.reduce((sum, plan) => sum + (plan.calculations?.totalIncome || 0), 0) / totalClients
+                    : 0;
+                const totalSavings = this.plans.reduce((sum, plan) => sum + (plan.calculations?.futureValueSavings || 0), 0);
+                const latestDate = totalClients > 0 
+                    ? new Date(Math.max(...this.plans.map(plan => new Date(plan.createdDate))))
+                    : null;
+
+                document.getElementById('totalClients').textContent = totalClients;
+                document.getElementById('avgAnnualIncome').textContent = this.formatCurrency(avgIncome);
+                document.getElementById('totalProjectedSavings').textContent = this.formatCurrency(totalSavings);
+                document.getElementById('latestPlanDate').textContent = latestDate 
+                    ? latestDate.toLocaleDateString() 
+                    : '-';
+            }
+
+            renderPlans() {
+                const container = document.getElementById('plansContainer');
+                
+                if (this.filteredPlans.length === 0) {
+                    if (this.plans.length === 0) {
+                        container.innerHTML = `
+                            <div class="empty-state">
+                                <h3>No client plans saved yet</h3>
+                                <p>Create your first client retirement plan to get started!</p>
+                                <a href="calculator.html" class="btn primary" style="margin-top: 15px; display: inline-block;">Create First Plan</a>
+                            </div>
+                        `;
+                    } else {
+                        container.innerHTML = `
+                            <div class="no-results">
+                                <h3>No plans match your search</h3>
+                                <p>Try adjusting your search terms or filters.</p>
+                            </div>
+                        `;
+                    }
+                    return;
+                }
+
+                container.innerHTML = this.filteredPlans.map(plan => this.renderPlanCard(plan)).join('');
+            }
+
+            renderPlanCard(plan) {
+                const createdDate = new Date(plan.createdDate).toLocaleDateString();
+                const inputs = plan.inputs || {};
+                const calculations = plan.calculations || {};
+                
+                const clientName = inputs.clientName || 'Unknown Client';
+                const spouseName = inputs.includeSpouse && inputs.spouse?.name ? ` & ${inputs.spouse.name}` : '';
+                const fullClientName = clientName + spouseName;
+                
+                const annualIncome = calculations.totalIncome || 0;
+                const yearsToRetirement = calculations.yearsToRetirement || 0;
+                const currentAge = inputs.currentAge || 0;
+                const retirementAge = inputs.retirementAge || 0;
+                
+                return `
+                    <div class="plan-card">
+                        <div class="plan-header">
+                            <div class="client-info">
+                                <div class="client-name">${fullClientName}</div>
+                                <div class="plan-meta">
+                                    Created: ${createdDate} | 
+                                    Age: ${currentAge} | 
+                                    Retirement at: ${retirementAge} | 
+                                    ${yearsToRetirement} years to go
+                                </div>
+                            </div>
+                            <div class="income-highlight">
+                                <div class="annual-income">${this.formatCurrency(annualIncome)}</div>
+                                <div class="income-label">Annual Income</div>
+                            </div>
+                        </div>
+                        <div class="plan-details">
+                            <div class="detail-item">
+                                <span class="detail-label">Current RRSP:</span>
+                                <span class="detail-value">${this.formatCurrency(inputs.currentRRSP || 0)}</span>
+                            </div>
+                            <div class="detail-item">
+                                <span class="detail-label">Current TFSA:</span>
+                                <span class="detail-value">${this.formatCurrency(inputs.currentTFSA || 0)}</span>
+                            </div>
+                            <div class="detail-item">
+                                <span class="detail-label">Monthly Contributions:</span>
+                                <span class="detail-value">${this.formatCurrency((inputs.rrspContribution + inputs.tfsaContribution) / 12 || 0)}</span>
+                            </div>
+                            <div class="detail-item">
+                                <span class="detail-label">Projected Savings:</span>
+                                <span class="detail-value">${this.formatCurrency(calculations.futureValueSavings || 0)}</span>
+                            </div>
+                            <div class="detail-item">
+                                <span class="detail-label">Expected Return:</span>
+                                <span class="detail-value">${inputs.investmentReturn || 0}%</span>
+                            </div>
+                            <div class="detail-item">
+                                <span class="detail-label">Government Benefits:</span>
+                                <span class="detail-value">${this.formatCurrency(inputs.govBenefits || 0)}</span>
+                            </div>
+                        </div>
+                        <div class="plan-actions">
+                            <button class="action-btn edit-btn" onclick="editPlan('${plan.id}')">Edit Plan</button>
+                            <button class="action-btn pdf-btn" onclick="generateClientPDF('${plan.id}')">PDF Report</button>
+                            <button class="action-btn delete-btn" onclick="showDeleteModal('${plan.id}')">Delete</button>
+                        </div>
+                    </div>
+                `;
+            }
+
+            formatCurrency(amount) {
+                return new Intl.NumberFormat('en-US', {
+                    style: 'currency',
+                    currency: 'USD',
+                    minimumFractionDigits: 0,
+                    maximumFractionDigits: 0,
+                }).format(amount);
+            }
+        }
+
+        // Global instance
+        const clientPlanManager = new ClientPlanManager();
+
+        // Global functions
+        let planToDelete = null;
+
+        function showDeleteModal(planId) {
+            planToDelete = planId;
+            document.getElementById('deleteModal').style.display = 'block';
+        }
+
+        function closeDeleteModal() {
+            document.getElementById('deleteModal').style.display = 'none';
+            planToDelete = null;
+        }
+
+        function confirmDelete() {
+            if (planToDelete) {
+                clientPlanManager.deletePlan(planToDelete);
+                closeDeleteModal();
+            }
+        }
+
+        function editPlan(planId) {
+            window.location.href = `calculator.html?edit=${planId}`;
+        }
+
+        function generateClientPDF(planId) {
+            const plan = clientPlanManager.getPlan(planId);
+            if (plan && plan.calculations) {
+                // Set the plan data for PDF generation
+                window.currentPlanForPDF = plan;
+                // Call the existing PDF generation function
+                if (typeof generatePDF === 'function') {
+                    generatePDF();
+                } else {
+                    alert('PDF generation function not available. Please open the calculator.');
+                }
+            }
+        }
+
+        function exportData() {
+            const dataStr = JSON.stringify(clientPlanManager.plans, null, 2);
+            const dataBlob = new Blob([dataStr], {type: 'application/json'});
+            const url = URL.createObjectURL(dataBlob);
+            
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = 'client-retirement-plans-backup.json';
+            link.click();
+            
+            URL.revokeObjectURL(url);
+        }
+
+        function importData() {
+            const input = document.createElement('input');
+            input.type = 'file';
+            input.accept = '.json';
+            
+            input.onchange = function(event) {
+                const file = event.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        try {
+                            const importedPlans = JSON.parse(e.target.result);
+                            if (Array.isArray(importedPlans)) {
+                                localStorage.setItem('clientRetirementPlans', JSON.stringify(importedPlans));
+                                location.reload();
+                            } else {
+                                alert('Invalid file format');
+                            }
+                        } catch (error) {
+                            alert('Error reading file: ' + error.message);
+                        }
+                    };
+                    reader.readAsText(file);
+                }
+            };
+            
+            input.click();
+        }
+
+        // Make clientPlanManager globally accessible
+        window.clientPlanManager = clientPlanManager;
+    </script>
+</body>
+</html>
