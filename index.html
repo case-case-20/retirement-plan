@@ -1,381 +1,28 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Retirement Income Calculator</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            padding: 20px;
-        }
-        
-        .container {
-            max-width: 1000px;
-            margin: 0 auto;
-            background: white;
-            border-radius: 20px;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
-            overflow: hidden;
-        }
-        
-        .header {
-            background: linear-gradient(135deg, #2c3e50, #4a6741);
-            color: white;
-            padding: 30px;
-            text-align: center;
-        }
-        
-        .header h1 {
-            font-size: 2.5rem;
-            margin-bottom: 10px;
-        }
-        
-        .header p {
-            font-size: 1.1rem;
-            opacity: 0.9;
-        }
-        
-        .content {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 0;
-        }
-        
-        .form-section {
-            padding: 40px;
-            border-right: 1px solid #eee;
-        }
-        
-        .results-section {
-            padding: 40px;
-            background: #f8f9fa;
-        }
-        
-        .section-title {
-            font-size: 1.5rem;
-            color: #2c3e50;
-            margin-bottom: 25px;
-            padding-bottom: 10px;
-            border-bottom: 3px solid #667eea;
-        }
-        
-        .input-group {
-            margin-bottom: 20px;
-        }
-        
-        .input-row {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 15px;
-            margin-bottom: 15px;
-        }
-        
-        label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: 600;
-            color: #34495e;
-            font-size: 0.95rem;
-        }
-        
-        input, select {
-            width: 100%;
-            padding: 12px 15px;
-            border: 2px solid #e1e8ed;
-            border-radius: 8px;
-            font-size: 1rem;
-            transition: border-color 0.3s ease;
-        }
-        
-        input:focus, select:focus {
-            outline: none;
-            border-color: #667eea;
-            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
-        }
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 15px;
-            margin-bottom: 15px;
-        }
-        
-        label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: 600;
-            color: #34495e;
-            font-size: 0.95rem;
-        }
-        
-        input, select {
-            width: 100%;
-            padding: 12px 15px;
-            border: 2px solid #e1e8ed;
-            border-radius: 8px;
-            font-size: 1rem;
-            transition: border-color 0.3s ease;
-        }
-        
-        input:focus, select:focus {
-            outline: none;
-            border-color: #667eea;
-            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
-        }
-        
-        .name-field {
-            background-color: #e8f5e8 !important;
-            border: 3px solid #27ae60 !important;
-            padding: 20px;
-            border-radius: 10px;
-            margin-bottom: 25px;
-        }
-        
-        .name-field label {
-            font-size: 1.1rem;
-            color: #27ae60;
-            font-weight: bold;
-            margin-bottom: 10px;
-        }
-        
-        .name-field input {
-            background-color: white;
-            border: 2px solid #27ae60;
-            font-size: 1.1rem;
-            padding: 15px;
-        }
-        
-        .checkbox-group {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            margin: 20px 0;
-        }
-        
-        .checkbox-group input[type="checkbox"] {
-            width: auto;
-            transform: scale(1.2);
-        }
-        
-        .spouse-section {
-            background: #f8f9fa;
-            padding: 20px;
-            border-radius: 10px;
-            margin-top: 20px;
-            border-left: 4px solid #667eea;
-        }
-        
-        .calculate-btn {
-            background: linear-gradient(135deg, #667eea, #764ba2);
-            color: white;
-            border: none;
-            padding: 15px 30px;
-            font-size: 1.1rem;
-            font-weight: 600;
-            border-radius: 10px;
-            cursor: pointer;
-            width: 100%;
-            margin-top: 20px;
-            transition: transform 0.2s ease;
-        }
-        
-        .calculate-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
-        }
-        
-        .results-card {
-            background: white;
-            border-radius: 15px;
-            padding: 25px;
-            margin-bottom: 20px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
-            border-left: 5px solid #27ae60;
-        }
-        
-        .results-card h3 {
-            color: #2c3e50;
-            margin-bottom: 15px;
-            font-size: 1.3rem;
-        }
-        
-        .income-amount {
-            font-size: 2.5rem;
-            font-weight: bold;
-            color: #27ae60;
-            margin-bottom: 10px;
-        }
-        
-        .breakdown {
-            display: grid;
-            gap: 10px;
-        }
-        
-        .breakdown-item {
-            display: flex;
-            justify-content: space-between;
-            padding: 8px 0;
-            border-bottom: 1px solid #eee;
-        }
-        
-        .breakdown-item:last-child {
-            border-bottom: none;
-            font-weight: bold;
-            border-top: 2px solid #2c3e50;
-            padding-top: 15px;
-            margin-top: 10px;
-        }
-        
-        .pdf-btn {
-            background: linear-gradient(135deg, #e74c3c, #c0392b);
-            color: white;
-            border: none;
-            padding: 15px 30px;
-            font-size: 1rem;
-            font-weight: 600;
-            border-radius: 10px;
-            cursor: pointer;
-            width: 100%;
-            margin-top: 20px;
-            transition: transform 0.2s ease;
-        }
-        
-        .pdf-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 20px rgba(231, 76, 60, 0.3);
-        }
-        
-        .pdf-btn:disabled {
-            background: #bdc3c7;
-            cursor: not-allowed;
-            transform: none;
-            box-shadow: none;
-        }
-        
-        .hidden {
-            display: none;
-        }
-        
-        @media (max-width: 768px) {
-            .content {
-                grid-template-columns: 1fr;
-            }
-            
-            .form-section {
-                border-right: none;
-                border-bottom: 1px solid #eee;
-            }
-            
-            .input-row {
-                grid-template-columns: 1fr;
-            }
-        }
-    </style>
-</head>
-<body>
-    <div class="container">
-        <div class="header">
-            <h1>🏖️ Retirement Income Calculator</h1>
-            <p>Plan your financial future with confidence</p>
-        </div>
-        
-        <div class="content">
-            <div class="form-section">
-                <h2 class="section-title">Personal Information</h2>
-                
-                <!-- CLIENT NAME FIELD - VERY VISIBLE -->
-                <div class="name-field">
-                    <label for="clientName">👤 Your Full Name</label>
-                    <input type="text" id="clientName" placeholder="Enter your full name here">
-                </div>
-                
-                <div class="input-row">
-                    <div class="input-group">
-                        <label for="currentAge">Current Age</label>
-                        <input type="number" id="currentAge" value="45" min="25" max="100">
+<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 15px;">
+                    <div>
+                        <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #34495e;" id="rrspContribLabel">RRSP Contribution (Monthly) ($)</label>
+                        <input type="number" id="rrspContribution" value="500" min="0" step="50" style="width: 100%; padding: 12px 15px; border: 2px solid #e1e8ed; border-radius: 8px; font-size: 1rem;">
                     </div>
-                    
-                    <div class="input-group">
-                        <label for="retirementAge">Retirement Age</label>
-                        <input type="number" id="retirementAge" value="65" min="50" max="80">
+                    <div>
+                        <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #34495e;" id="tfsaContribLabel">TFSA Contribution (Monthly) ($)</label>
+                        <input type="number" id="tfsaContribution" value="300" min="0" step="50" style="width: 100%; padding: 12px 15px; border: 2px solid #e1e8ed; border-radius: 8px; font-size: 1rem;">
                     </div>
                 </div>
                 
-                <div class="input-group">
-                    <label for="lifeExpectancy">Life Expectancy</label>
-                    <input type="number" id="lifeExpectancy" value="85" min="65" max="100">
-                </div>
+                <h3 style="color: #2c3e50; margin: 30px 0 20px 0; font-size: 1.3rem;">Assumptions</h3>
                 
-                <h3 class="section-title" style="margin-top: 30px; font-size: 1.3rem;">Current Savings</h3>
-                
-                <div class="input-row">
-                    <div class="input-group">
-                        <label for="rrsp">Current RRSP Balance ($)</label>
-                        <input type="number" id="rrsp" value="150000" min="0" step="1000">
-                    </div>
-                    
-                    <div class="input-group">
-                        <label for="tfsa">Current TFSA Balance ($)</label>
-                        <input type="number" id="tfsa" value="75000" min="0" step="1000">
-                    </div>
-                </div>
-                
-                <div class="input-row">
-                    <div class="input-group">
-                        <label for="nonReg">Non-Registered Savings ($)</label>
-                        <input type="number" id="nonReg" value="50000" min="0" step="1000">
-                    </div>
-                    
-                    <div class="input-group">
-                        <label for="pensionIncome">Annual Pension Income ($)</label>
-                        <input type="number" id="pensionIncome" value="12000" min="0" step="1000">
-                    </div>
-                </div>
-                
-                <h3 class="section-title" style="margin-top: 30px; font-size: 1.3rem;">Ongoing Contributions</h3>
-                
-                <div class="input-group">
-                    <label for="contributionFrequency">Contribution Frequency</label>
-                    <select id="contributionFrequency">
-                        <option value="monthly" selected>Monthly</option>
-                        <option value="annual">Annual</option>
-                    </select>
-                </div>
-                
-                <div class="input-row">
-                    <div class="input-group">
-                        <label for="rrspContribution" id="rrspContribLabel">RRSP Contribution (Monthly) ($)</label>
-                        <input type="number" id="rrspContribution" value="500" min="0" step="50">
-                    </div>
-                    
-                    <div class="input-group">
-                        <label for="tfsaContribution" id="tfsaContribLabel">TFSA Contribution (Monthly) ($)</label>
-                        <input type="number" id="tfsaContribution" value="300" min="0" step="50">
-                    </div>
-                </div>
-                
-                <h3 class="section-title" style="margin-top: 30px; font-size: 1.3rem;">Assumptions</h3>
-                
-                <div class="input-row">
-                    <div class="input-group">
-                        <label for="investmentReturn">Expected Annual Return (%)</label>
-                        <select id="investmentReturn">
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 15px;">
+                    <div>
+                        <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #34495e;">Expected Annual Return (%)</label>
+                        <select id="investmentReturn" style="width: 100%; padding: 12px 15px; border: 2px solid #e1e8ed; border-radius: 8px; font-size: 1rem;">
                             <option value="4">Conservative (4%)</option>
                             <option value="6" selected>Moderate (6%)</option>
                             <option value="8">Aggressive (8%)</option>
                         </select>
                     </div>
-                    
-                    <div class="input-group">
-                        <label for="inflationRate">Inflation Rate (%)</label>
-                        <select id="inflationRate">
+                    <div>
+                        <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #34495e;">Inflation Rate (%)</label>
+                        <select id="inflationRate" style="width: 100%; padding: 12px 15px; border: 2px solid #e1e8ed; border-radius: 8px; font-size: 1rem;">
                             <option value="2" selected>Low (2%)</option>
                             <option value="2.5">Moderate (2.5%)</option>
                             <option value="3">High (3%)</option>
@@ -383,176 +30,105 @@
                     </div>
                 </div>
                 
-                <div class="input-group">
-                    <label for="govBenefits">Government Benefits (OAS + CPP) ($)</label>
-                    <input type="number" id="govBenefits" value="18000" min="0" step="1000">
+                <div style="margin-bottom: 20px;">
+                    <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #34495e;">Government Benefits (OAS + CPP) ($)</label>
+                    <input type="number" id="govBenefits" value="18000" min="0" step="1000" style="width: 100%; padding: 12px 15px; border: 2px solid #e1e8ed; border-radius: 8px; font-size: 1rem;">
                 </div>
                 
-                <div class="checkbox-group">
-                    <input type="checkbox" id="includeSpouse">
-                    <label for="includeSpouse">Include Spouse</label>
+                <div style="display: flex; align-items: center; gap: 10px; margin: 20px 0;">
+                    <input type="checkbox" id="includeSpouse" style="transform: scale(1.2);">
+                    <label for="includeSpouse" style="font-weight: 600; color: #34495e;">Include Spouse</label>
                 </div>
                 
-                <div id="spouseSection" class="spouse-section hidden">
+                <div id="spouseSection" class="hidden" style="background: #f8f9fa; padding: 20px; border-radius: 10px; margin-top: 20px; border-left: 4px solid #667eea;">
                     <h4 style="margin-bottom: 15px; color: #2c3e50;">Spouse Information</h4>
                     
-                    <div class="input-group">
-                        <label for="spouseName">Spouse Full Name</label>
-                        <input type="text" id="spouseName" placeholder="Enter spouse's full name">
+                    <div style="margin-bottom: 20px;">
+                        <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #34495e;">Spouse Full Name</label>
+                        <input type="text" id="spouseName" placeholder="Enter spouse's full name" style="width: 100%; padding: 12px 15px; border: 2px solid #e1e8ed; border-radius: 8px; font-size: 1rem;">
                     </div>
                     
-                    <div class="input-row">
-                        <div class="input-group">
-                            <label for="spouseAge">Spouse Current Age</label>
-                            <input type="number" id="spouseAge" value="43" min="25" max="100">
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 15px;">
+                        <div>
+                            <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #34495e;">Spouse Current Age</label>
+                            <input type="number" id="spouseAge" value="43" min="25" max="100" style="width: 100%; padding: 12px 15px; border: 2px solid #e1e8ed; border-radius: 8px; font-size: 1rem;">
                         </div>
-                        
-                        <div class="input-group">
-                            <label for="spouseRetirementAge">Spouse Retirement Age</label>
-                            <input type="number" id="spouseRetirementAge" value="65" min="50" max="80">
-                        </div>
-                    </div>
-                    
-                    <div class="input-row">
-                        <div class="input-group">
-                            <label for="spouseRRSP">Spouse RRSP ($)</label>
-                            <input type="number" id="spouseRRSP" value="120000" min="0" step="1000">
-                        </div>
-                        
-                        <div class="input-group">
-                            <label for="spouseTFSA">Spouse TFSA ($)</label>
-                            <input type="number" id="spouseTFSA" value="60000" min="0" step="1000">
+                        <div>
+                            <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #34495e;">Spouse Retirement Age</label>
+                            <input type="number" id="spouseRetirementAge" value="65" min="50" max="80" style="width: 100%; padding: 12px 15px; border: 2px solid #e1e8ed; border-radius: 8px; font-size: 1rem;">
                         </div>
                     </div>
                     
-                    <div class="input-row">
-                        <div class="input-group">
-                            <label for="spouseRRSPContrib" id="spouseRRSPContribLabel">Spouse RRSP Contribution (Monthly) ($)</label>
-                            <input type="number" id="spouseRRSPContrib" value="400" min="0" step="50">
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 15px;">
+                        <div>
+                            <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #34495e;">Spouse RRSP ($)</label>
+                            <input type="number" id="spouseRRSP" value="120000" min="0" step="1000" style="width: 100%; padding: 12px 15px; border: 2px solid #e1e8ed; border-radius: 8px; font-size: 1rem;">
                         </div>
-                        
-                        <div class="input-group">
-                            <label for="spouseTFSAContrib" id="spouseTFSAContribLabel">Spouse TFSA Contribution (Monthly) ($)</label>
-                            <input type="number" id="spouseTFSAContrib" value="250" min="0" step="50">
-                        </div>
-                    </div>
-                    
-                    <div class="input-row">
-                        <div class="input-group">
-                            <label for="spouseNonReg">Spouse Non-Reg ($)</label>
-                            <input type="number" id="spouseNonReg" value="30000" min="0" step="1000">
-                        </div>
-                        
-                        <div class="input-group">
-                            <label for="spousePension">Spouse Pension ($)</label>
-                            <input type="number" id="spousePension" value="8000" min="0" step="1000">
+                        <div>
+                            <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #34495e;">Spouse TFSA ($)</label>
+                            <input type="number" id="spouseTFSA" value="60000" min="0" step="1000" style="width: 100%; padding: 12px 15px; border: 2px solid #e1e8ed; border-radius: 8px; font-size: 1rem;">
                         </div>
                     </div>
                     
-                    <div class="input-group">
-                        <label for="spouseGovBenefits">Spouse Gov Benefits ($)</label>
-                        <input type="number" id="spouseGovBenefits" value="16000" min="0" step="1000">
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 15px;">
+                        <div>
+                            <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #34495e;" id="spouseRRSPContribLabel">Spouse RRSP Contribution (Monthly) ($)</label>
+                            <input type="number" id="spouseRRSPContrib" value="400" min="0" step="50" style="width: 100%; padding: 12px 15px; border: 2px solid #e1e8ed; border-radius: 8px; font-size: 1rem;">
+                        </div>
+                        <div>
+                            <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #34495e;" id="spouseTFSAContribLabel">Spouse TFSA Contribution (Monthly) ($)</label>
+                            <input type="number" id="spouseTFSAContrib" value="250" min="0" step="50" style="width: 100%; padding: 12px 15px; border: 2px solid #e1e8ed; border-radius: 8px; font-size: 1rem;">
+                        </div>
+                    </div>
+                    
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 15px;">
+                        <div>
+                            <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #34495e;">Spouse Non-Reg ($)</label>
+                            <input type="number" id="spouseNonReg" value="30000" min="0" step="1000" style="width: 100%; padding: 12px 15px; border: 2px solid #e1e8ed; border-radius: 8px; font-size: 1rem;">
+                        </div>
+                        <div>
+                            <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #34495e;">Spouse Pension ($)</label>
+                            <input type="number" id="spousePension" value="8000" min="0" step="1000" style="width: 100%; padding: 12px 15px; border: 2px solid #e1e8ed; border-radius: 8px; font-size: 1rem;">
+                        </div>
+                    </div>
+                    
+                    <div style="margin-bottom: 20px;">
+                        <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #34495e;">Spouse Gov Benefits ($)</label>
+                        <input type="number" id="spouseGovBenefits" value="16000" min="0" step="1000" style="width: 100%; padding: 12px 15px; border: 2px solid #e1e8ed; border-radius: 8px; font-size: 1rem;">
                     </div>
                 </div>
                 
-                <button class="calculate-btn" onclick="calculateRetirement()">
+                <button onclick="calculateRetirement()" style="background: linear-gradient(135deg, #667eea, #764ba2); color: white; border: none; padding: 15px 30px; font-size: 1.1rem; font-weight: 600; border-radius: 10px; cursor: pointer; width: 100%; margin-top: 20px; transition: transform 0.2s ease;">
                     Calculate Retirement Income 🚀
                 </button>
-            </div>
+            `;
             
-            <div class="results-section">
-                <h2 class="section-title">Your Retirement Plan</h2>
+            // Add event listeners
+            document.getElementById('includeSpouse').addEventListener('change', function() {
+                const spouseSection = document.getElementById('spouseSection');
+                if (this.checked) {
+                    spouseSection.classList.remove('hidden');
+                } else {
+                    spouseSection.classList.add('hidden');
+                }
+            });
+            
+            document.getElementById('contributionFrequency').addEventListener('change', function() {
+                const frequency = this.value;
+                const isMonthly = frequency === 'monthly';
                 
-                <div id="results" class="hidden">
-                    <div class="results-card">
-                        <h3>Annual Retirement Income</h3>
-                        <div class="income-amount" id="totalIncome">$0</div>
-                        <p style="color: #7f8c8d;">Adjusted for inflation</p>
-                    </div>
-                    
-                    <div class="results-card">
-                        <h3>Income Breakdown</h3>
-                        <div class="breakdown" id="breakdown">
-                            <!-- Results will be populated here -->
-                        </div>
-                    </div>
-                    
-                    <div class="results-card">
-                        <h3>Summary</h3>
-                        <div id="summary">
-                            <!-- Summary will be populated here -->
-                        </div>
-                    </div>
-                    
-                    <button class="pdf-btn" onclick="generatePDF()" id="pdfBtn">
-                        📄 Generate PDF Report
-                    </button>
-                </div>
-                
-                <div id="placeholder" style="text-align: center; padding: 60px 20px; color: #7f8c8d;">
-                    <div style="font-size: 4rem; margin-bottom: 20px;">📊</div>
-                    <h3 style="margin-bottom: 10px;">Ready to plan your future?</h3>
-                    <p>Fill out the form and click calculate to see your projected retirement income.</p>
-                </div>
-            </div>
-        </div>
-    </div>
-    
-    <!-- Include jsPDF library -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-    
-    <script>
-        // Store calculation results globally for PDF generation
-        let calculationResults = null;
+                document.getElementById('rrspContribLabel').textContent = 
+                    `RRSP Contribution (${isMonthly ? 'Monthly' : 'Annual'}) ($)`;
+                document.getElementById('tfsaContribLabel').textContent = 
+                    `TFSA Contribution (${isMonthly ? 'Monthly' : 'Annual'}) ($)`;
+                document.getElementById('spouseRRSPContribLabel').textContent = 
+                    `Spouse RRSP Contribution (${isMonthly ? 'Monthly' : 'Annual'}) ($)`;
+                document.getElementById('spouseTFSAContribLabel').textContent = 
+                    `Spouse TFSA Contribution (${isMonthly ? 'Monthly' : 'Annual'}) ($)`;
+            });
+        }
         
-        // Toggle spouse section
-        document.getElementById('includeSpouse').addEventListener('change', function() {
-            const spouseSection = document.getElementById('spouseSection');
-            if (this.checked) {
-                spouseSection.classList.remove('hidden');
-            } else {
-                spouseSection.classList.add('hidden');
-            }
-        });
-        
-        // Update contribution labels based on frequency
-        document.getElementById('contributionFrequency').addEventListener('change', function() {
-            const frequency = this.value;
-            const isMonthly = frequency === 'monthly';
-            
-            // Update main contribution labels
-            document.getElementById('rrspContribLabel').textContent = 
-                `RRSP Contribution (${isMonthly ? 'Monthly' : 'Annual'}) ($)`;
-            document.getElementById('tfsaContribLabel').textContent = 
-                `TFSA Contribution (${isMonthly ? 'Monthly' : 'Annual'}) ($)`;
-                
-            // Update spouse contribution labels
-            document.getElementById('spouseRRSPContribLabel').textContent = 
-                `Spouse RRSP Contribution (${isMonthly ? 'Monthly' : 'Annual'}) ($)`;
-            document.getElementById('spouseTFSAContribLabel').textContent = 
-                `Spouse TFSA Contribution (${isMonthly ? 'Monthly' : 'Annual'}) ($)`;
-            
-            // Adjust default values based on frequency
-            const rrspInput = document.getElementById('rrspContribution');
-            const tfsaInput = document.getElementById('tfsaContribution');
-            const spouseRRSPInput = document.getElementById('spouseRRSPContrib');
-            const spouseTFSAInput = document.getElementById('spouseTFSAContrib');
-            
-            if (isMonthly) {
-                // Convert annual to monthly (divide by 12)
-                rrspInput.value = Math.round(rrspInput.value / 12);
-                tfsaInput.value = Math.round(tfsaInput.value / 12);
-                spouseRRSPInput.value = Math.round(spouseRRSPInput.value / 12);
-                spouseTFSAInput.value = Math.round(spouseTFSAInput.value / 12);
-            } else {
-                // Convert monthly to annual (multiply by 12)
-                rrspInput.value = rrspInput.value * 12;
-                tfsaInput.value = tfsaInput.value * 12;
-                spouseRRSPInput.value = spouseRRSPInput.value * 12;
-                spouseTFSAInput.value = spouseTFSAInput.value * 12;
-            }
-        });
-        
+        // Calculator Functions
         function calculateRetirement() {
             // Get all input values
             const clientName = document.getElementById('clientName').value.trim() || 'Client';
@@ -566,14 +142,12 @@
             const pensionIncome = parseFloat(document.getElementById('pensionIncome').value) || 0;
             const govBenefits = parseFloat(document.getElementById('govBenefits').value) || 0;
             
-            // Get contribution information
             const contributionFrequency = document.getElementById('contributionFrequency').value;
             const isMonthly = contributionFrequency === 'monthly';
             
             let rrspContribution = parseFloat(document.getElementById('rrspContribution').value) || 0;
             let tfsaContribution = parseFloat(document.getElementById('tfsaContribution').value) || 0;
             
-            // Convert to annual if monthly
             if (isMonthly) {
                 rrspContribution *= 12;
                 tfsaContribution *= 12;
@@ -581,10 +155,8 @@
             
             const investmentReturn = parseFloat(document.getElementById('investmentReturn').value) / 100;
             const inflationRate = parseFloat(document.getElementById('inflationRate').value) / 100;
-            
             const includeSpouse = document.getElementById('includeSpouse').checked;
             
-            // Calculate years to retirement
             const yearsToRetirement = retirementAge - currentAge;
             const yearsInRetirement = lifeExpectancy - retirementAge;
             
@@ -593,14 +165,12 @@
                 return;
             }
             
-            // Calculate future value of current savings + contributions
+            // Calculate future values
             const futureValueRRSP = calculateFutureValueWithContributions(rrsp, rrspContribution, investmentReturn, yearsToRetirement);
             const futureValueTFSA = calculateFutureValueWithContributions(tfsa, tfsaContribution, investmentReturn, yearsToRetirement);
             const futureValueNonReg = nonReg * Math.pow(1 + investmentReturn, yearsToRetirement);
             
             const totalFutureValue = futureValueRRSP + futureValueTFSA + futureValueNonReg;
-            
-            // Calculate annual withdrawal from savings (4% rule)
             const withdrawalRate = 0.04;
             const annualWithdrawalFromSavings = totalFutureValue * withdrawalRate;
             
@@ -621,7 +191,6 @@
                 spousePensionTotal = parseFloat(document.getElementById('spousePension').value) || 0;
                 spouseGovTotal = parseFloat(document.getElementById('spouseGovBenefits').value) || 0;
                 
-                // Spouse contributions
                 let spouseRRSPContrib = parseFloat(document.getElementById('spouseRRSPContrib').value) || 0;
                 let spouseTFSAContrib = parseFloat(document.getElementById('spouseTFSAContrib').value) || 0;
                 
@@ -652,17 +221,13 @@
                 };
             }
             
-            // Calculate total annual income
             const totalAnnualIncome = annualWithdrawalFromSavings + spouseWithdrawal + pensionIncome + spousePensionTotal + govBenefits + spouseGovTotal;
-            
-            // Adjust for inflation to today's purchasing power
             const inflationAdjustedIncome = totalAnnualIncome / Math.pow(1 + inflationRate, yearsToRetirement);
             
-            // Calculate current total contributions for summary
             const currentTotalSavings = rrsp + tfsa + nonReg;
             const totalAnnualContributions = rrspContribution + tfsaContribution;
             
-            // Store results globally for PDF generation
+            // Store results globally
             calculationResults = {
                 inputs: {
                     clientName,
@@ -700,18 +265,13 @@
                 }
             };
             
-            // Display results
             displayResults(calculationResults.calculations);
         }
         
-        // Calculate future value with regular contributions (annuity formula)
         function calculateFutureValueWithContributions(presentValue, annualContribution, rate, years) {
             if (years <= 0) return presentValue;
             
-            // Future value of present amount
             const futureValueOfPresent = presentValue * Math.pow(1 + rate, years);
-            
-            // Future value of annuity (contributions)
             const futureValueOfContributions = annualContribution * 
                 ((Math.pow(1 + rate, years) - 1) / rate);
             
@@ -719,17 +279,41 @@
         }
         
         function displayResults(data) {
-            document.getElementById('placeholder').classList.add('hidden');
-            document.getElementById('results').classList.remove('hidden');
+            const resultsContainer = document.getElementById('calculatorResults');
             
-            // Display total income
-            document.getElementById('totalIncome').textContent = 
-                '$' + Math.round(data.totalIncome).toLocaleString();
+            resultsContainer.innerHTML = `
+                <h2 style="color: #2c3e50; margin-bottom: 25px; border-bottom: 3px solid #667eea; padding-bottom: 10px;">Your Retirement Plan</h2>
+                
+                <div style="background: white; border-radius: 15px; padding: 25px; margin-bottom: 20px; box-shadow: 0 5px 15px rgba(0,0,0,0.08); border-left: 5px solid #27ae60;">
+                    <h3 style="color: #2c3e50; margin-bottom: 15px; font-size: 1.3rem;">Annual Retirement Income</h3>
+                    <div style="font-size: 2.5rem; font-weight: bold; color: #27ae60; margin-bottom: 10px;">
+                        ${Math.round(data.totalIncome).toLocaleString()}
+                    </div>
+                    <p style="color: #7f8c8d;">Adjusted for inflation</p>
+                </div>
+                
+                <div style="background: white; border-radius: 15px; padding: 25px; margin-bottom: 20px; box-shadow: 0 5px 15px rgba(0,0,0,0.08); border-left: 5px solid #27ae60;">
+                    <h3 style="color: #2c3e50; margin-bottom: 15px; font-size: 1.3rem;">Income Breakdown</h3>
+                    <div id="breakdown"></div>
+                </div>
+                
+                <div style="background: white; border-radius: 15px; padding: 25px; margin-bottom: 20px; box-shadow: 0 5px 15px rgba(0,0,0,0.08); border-left: 5px solid #27ae60;">
+                    <h3 style="color: #2c3e50; margin-bottom: 15px; font-size: 1.3rem;">Summary</h3>
+                    <div id="summary"></div>
+                </div>
+                
+                <div style="display: flex; gap: 15px; flex-wrap: wrap;">
+                    <button onclick="saveCurrentCalculation()" style="background: linear-gradient(135deg, #27ae60, #2ecc71); color: white; border: none; padding: 15px 30px; font-size: 1rem; font-weight: 600; border-radius: 10px; cursor: pointer; transition: transform 0.2s ease; flex: 1;">
+                        💾 Save Calculation
+                    </button>
+                    <button onclick="generatePDF()" style="background: linear-gradient(135deg, #e74c3c, #c0392b); color: white; border: none; padding: 15px 30px; font-size: 1rem; font-weight: 600; border-radius: 10px; cursor: pointer; transition: transform 0.2s ease; flex: 1;">
+                        📄 Generate PDF
+                    </button>
+                </div>
+            `;
             
             // Create breakdown
             const breakdown = document.getElementById('breakdown');
-            breakdown.innerHTML = '';
-            
             const items = [
                 { label: 'Investment Withdrawals', amount: data.savingsWithdrawal }
             ];
@@ -754,28 +338,27 @@
                 items.push({ label: 'Spouse Government Benefits', amount: data.spouseGovTotal });
             }
             
+            let breakdownHTML = '';
             items.forEach(item => {
-                const div = document.createElement('div');
-                div.className = 'breakdown-item';
-                div.innerHTML = `
-                    <span>${item.label}</span>
-                    <span>${Math.round(item.amount).toLocaleString()}</span>
+                breakdownHTML += `
+                    <div style="display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #eee;">
+                        <span>${item.label}</span>
+                        <span>${Math.round(item.amount).toLocaleString()}</span>
+                    </div>
                 `;
-                breakdown.appendChild(div);
             });
             
-            // Add total
-            const totalDiv = document.createElement('div');
-            totalDiv.className = 'breakdown-item';
-            totalDiv.innerHTML = `
-                <span>Total Annual Income</span>
-                <span>${Math.round(data.totalIncome).toLocaleString()}</span>
+            breakdownHTML += `
+                <div style="display: flex; justify-content: space-between; padding: 15px 0 8px 0; border-top: 2px solid #2c3e50; margin-top: 10px; font-weight: bold;">
+                    <span>Total Annual Income</span>
+                    <span>${Math.round(data.totalIncome).toLocaleString()}</span>
+                </div>
             `;
-            breakdown.appendChild(totalDiv);
+            
+            breakdown.innerHTML = breakdownHTML;
             
             // Create summary
             const summary = document.getElementById('summary');
-            const monthlyOrAnnual = data.isMonthly ? 'monthly' : 'annual';
             const contributionDisplay = data.isMonthly ? 
                 `${Math.round(data.totalAnnualContributions / 12).toLocaleString()}/month` : 
                 `${Math.round(data.totalAnnualContributions).toLocaleString()}/year`;
@@ -794,34 +377,35 @@
             `;
         }
         
+        async function saveCurrentCalculation() {
+            if (!calculationResults) {
+                alert('Please calculate first!');
+                return;
+            }
+            
+            await saveCalculation(calculationResults.inputs, calculationResults.calculations);
+        }
+        
         function generatePDF() {
             if (!calculationResults) {
                 alert('Please calculate your retirement income first!');
                 return;
             }
             
-            // Disable button during generation
-            const pdfBtn = document.getElementById('pdfBtn');
-            pdfBtn.disabled = true;
-            pdfBtn.textContent = 'Generating PDF...';
-            
             try {
                 const { jsPDF } = window.jspdf;
                 const doc = new jsPDF();
                 
-                // Set up the document
                 const pageWidth = doc.internal.pageSize.width;
                 const pageHeight = doc.internal.pageSize.height;
                 let yPosition = 20;
                 
-                // Helper function to add text with automatic line breaks
                 function addText(text, x, y, maxWidth = pageWidth - 40) {
                     const lines = doc.splitTextToSize(text, maxWidth);
                     doc.text(lines, x, y);
                     return y + (lines.length * 6);
                 }
                 
-                // Helper function to check if we need a new page
                 function checkNewPage(neededSpace = 20) {
                     if (yPosition + neededSpace > pageHeight - 20) {
                         doc.addPage();
@@ -855,102 +439,6 @@
                 yPosition = addText(`Generated on: ${today}`, 20, yPosition);
                 yPosition += 15;
                 
-                // Personal Information Section
-                checkNewPage(40);
-                doc.setFontSize(16);
-                doc.setFont(undefined, 'bold');
-                yPosition = addText('Personal Information', 20, yPosition);
-                yPosition += 5;
-                
-                doc.setFontSize(11);
-                doc.setFont(undefined, 'normal');
-                
-                yPosition = addText(`Client Name: ${inputs.clientName}`, 20, yPosition);
-                yPosition = addText(`Current Age: ${inputs.currentAge}`, 20, yPosition);
-                yPosition = addText(`Retirement Age: ${inputs.retirementAge}`, 20, yPosition);
-                yPosition = addText(`Life Expectancy: ${inputs.lifeExpectancy}`, 20, yPosition);
-                yPosition = addText(`Years to Retirement: ${calculationResults.calculations.yearsToRetirement}`, 20, yPosition);
-                yPosition = addText(`Years in Retirement: ${calculationResults.calculations.yearsInRetirement}`, 20, yPosition);
-                yPosition += 10;
-                
-                // Current Savings Section
-                checkNewPage(50);
-                doc.setFontSize(16);
-                doc.setFont(undefined, 'bold');
-                yPosition = addText('Current Savings', 20, yPosition);
-                yPosition += 5;
-                
-                doc.setFontSize(11);
-                doc.setFont(undefined, 'normal');
-                yPosition = addText(`RRSP Balance: ${inputs.currentRRSP.toLocaleString()}`, 20, yPosition);
-                yPosition = addText(`TFSA Balance: ${inputs.currentTFSA.toLocaleString()}`, 20, yPosition);
-                yPosition = addText(`Non-Registered Savings: ${inputs.currentNonReg.toLocaleString()}`, 20, yPosition);
-                yPosition = addText(`Total Current Savings: ${calculationResults.calculations.currentSavings.toLocaleString()}`, 20, yPosition);
-                yPosition += 10;
-                
-                // Contributions Section
-                checkNewPage(40);
-                doc.setFontSize(16);
-                doc.setFont(undefined, 'bold');
-                yPosition = addText('Ongoing Contributions', 20, yPosition);
-                yPosition += 5;
-                
-                doc.setFontSize(11);
-                doc.setFont(undefined, 'normal');
-                const frequency = inputs.contributionFrequency === 'monthly' ? 'Monthly' : 'Annual';
-                const rrspContrib = inputs.contributionFrequency === 'monthly' ? 
-                    inputs.rrspContribution / 12 : inputs.rrspContribution;
-                const tfsaContrib = inputs.contributionFrequency === 'monthly' ? 
-                    inputs.tfsaContribution / 12 : inputs.tfsaContribution;
-                
-                yPosition = addText(`RRSP Contribution (${frequency}): ${Math.round(rrspContrib).toLocaleString()}`, 20, yPosition);
-                yPosition = addText(`TFSA Contribution (${frequency}): ${Math.round(tfsaContrib).toLocaleString()}`, 20, yPosition);
-                yPosition = addText(`Total Annual Contributions: ${inputs.rrspContribution.toLocaleString()} + ${inputs.tfsaContribution.toLocaleString()} = ${calculationResults.calculations.totalAnnualContributions.toLocaleString()}`, 20, yPosition);
-                yPosition += 10;
-                
-                // Spouse Information (if applicable)
-                if (inputs.includeSpouse) {
-                    checkNewPage(60);
-                    doc.setFontSize(16);
-                    doc.setFont(undefined, 'bold');
-                    yPosition = addText('Spouse Information', 20, yPosition);
-                    yPosition += 5;
-                    
-                    doc.setFontSize(11);
-                    doc.setFont(undefined, 'normal');
-                    const spouse = inputs.spouse;
-                    yPosition = addText(`Spouse Name: ${spouse.name}`, 20, yPosition);
-                    yPosition = addText(`Spouse Current Age: ${spouse.age}`, 20, yPosition);
-                    yPosition = addText(`Spouse Retirement Age: ${spouse.retirementAge}`, 20, yPosition);
-                    yPosition = addText(`Spouse Years to Retirement: ${spouse.yearsToRetirement}`, 20, yPosition);
-                    yPosition = addText(`Spouse RRSP: ${spouse.currentRRSP.toLocaleString()}`, 20, yPosition);
-                    yPosition = addText(`Spouse TFSA: ${spouse.currentTFSA.toLocaleString()}`, 20, yPosition);
-                    yPosition = addText(`Spouse Non-Registered: ${spouse.currentNonReg.toLocaleString()}`, 20, yPosition);
-                    
-                    const spouseRrspContrib = inputs.contributionFrequency === 'monthly' ? 
-                        spouse.rrspContribution / 12 : spouse.rrspContribution;
-                    const spouseTfsaContrib = inputs.contributionFrequency === 'monthly' ? 
-                        spouse.tfsaContribution / 12 : spouse.tfsaContribution;
-                    
-                    yPosition = addText(`Spouse RRSP Contribution (${frequency}): ${Math.round(spouseRrspContrib).toLocaleString()}`, 20, yPosition);
-                    yPosition = addText(`Spouse TFSA Contribution (${frequency}): ${Math.round(spouseTfsaContrib).toLocaleString()}`, 20, yPosition);
-                    yPosition += 10;
-                }
-                
-                // Assumptions Section
-                checkNewPage(40);
-                doc.setFontSize(16);
-                doc.setFont(undefined, 'bold');
-                yPosition = addText('Investment Assumptions', 20, yPosition);
-                yPosition += 5;
-                
-                doc.setFontSize(11);
-                doc.setFont(undefined, 'normal');
-                yPosition = addText(`Expected Annual Return: ${inputs.investmentReturn}%`, 20, yPosition);
-                yPosition = addText(`Inflation Rate: ${inputs.inflationRate}%`, 20, yPosition);
-                yPosition = addText(`Withdrawal Rate: 4% (Standard Safe Withdrawal Rate)`, 20, yPosition);
-                yPosition += 10;
-                
                 // Results Section
                 checkNewPage(60);
                 doc.setFontSize(18);
@@ -970,105 +458,965 @@
                 yPosition = addText('(Adjusted for inflation - in today\'s purchasing power)', 20, yPosition + 5);
                 yPosition += 15;
                 
-                // Income Breakdown
-                doc.setFontSize(14);
-                doc.setFont(undefined, 'bold');
-                yPosition = addText('Income Breakdown:', 20, yPosition);
-                yPosition += 5;
-                
-                doc.setFontSize(11);
-                doc.setFont(undefined, 'normal');
-                const calc = calculationResults.calculations;
-                
-                yPosition = addText(`• Investment Withdrawals: ${Math.round(calc.savingsWithdrawal).toLocaleString()}`, 25, yPosition);
-                
-                if (inputs.includeSpouse && calc.spouseWithdrawal > 0) {
-                    yPosition = addText(`• Spouse Investment Withdrawals: ${Math.round(calc.spouseWithdrawal).toLocaleString()}`, 25, yPosition);
-                }
-                
-                if (calc.pensionIncome > 0) {
-                    yPosition = addText(`• Pension Income: ${Math.round(calc.pensionIncome).toLocaleString()}`, 25, yPosition);
-                }
-                
-                if (calc.spousePensionTotal > 0) {
-                    yPosition = addText(`• Spouse Pension Income: ${Math.round(calc.spousePensionTotal).toLocaleString()}`, 25, yPosition);
-                }
-                
-                if (calc.govBenefits > 0) {
-                    yPosition = addText(`• Government Benefits (OAS + CPP): ${Math.round(calc.govBenefits).toLocaleString()}`, 25, yPosition);
-                }
-                
-                if (calc.spouseGovTotal > 0) {
-                    yPosition = addText(`• Spouse Government Benefits: ${Math.round(calc.spouseGovTotal).toLocaleString()}`, 25, yPosition);
-                }
-                
-                yPosition += 10;
-                
-                // Future Value Projections
-                checkNewPage(40);
-                doc.setFontSize(14);
-                doc.setFont(undefined, 'bold');
-                yPosition = addText('Projected Savings at Retirement:', 20, yPosition);
-                yPosition += 5;
-                
-                doc.setFontSize(11);
-                doc.setFont(undefined, 'normal');
-                yPosition = addText(`Your Total Savings: ${Math.round(calc.futureValueSavings).toLocaleString()}`, 20, yPosition);
-                
-                if (inputs.includeSpouse && calc.spouseFutureValue > 0) {
-                    yPosition = addText(`Spouse Total Savings: ${Math.round(calc.spouseFutureValue).toLocaleString()}`, 20, yPosition);
-                    yPosition = addText(`Combined Savings: ${Math.round(calc.futureValueSavings + calc.spouseFutureValue).toLocaleString()}`, 20, yPosition);
-                }
-                
-                yPosition += 15;
-                
-                // Important Notes
-                checkNewPage(50);
-                doc.setFontSize(14);
-                doc.setFont(undefined, 'bold');
-                yPosition = addText('Important Notes & Assumptions:', 20, yPosition);
-                yPosition += 5;
-                
-                doc.setFontSize(10);
-                doc.setFont(undefined, 'normal');
-                const notes = [
-                    '• This calculation uses the 4% Safe Withdrawal Rate, a commonly accepted rule for retirement planning.',
-                    '• All dollar amounts are adjusted for inflation and represent today\'s purchasing power.',
-                    '• Investment returns are assumed to be consistent year-over-year, though actual returns will vary.',
-                    '• Government benefit amounts (OAS/CPP) should be verified with official sources.',
-                    '• This projection assumes you continue contributing at the specified rate until retirement.',
-                    '• Tax implications are not fully accounted for in this basic calculation.',
-                    '• Consider consulting with a financial advisor for personalized retirement planning.',
-                    '• Market volatility and sequence of returns risk are not factored into this calculation.',
-                    '• Healthcare costs and long-term care expenses should be considered separately.'
-                ];
-                
-                notes.forEach(note => {
-                    yPosition = addText(note, 20, yPosition);
-                    yPosition += 2;
-                });
-                
-                // Footer
-                checkNewPage(30);
-                yPosition = pageHeight - 40;
-                doc.setFontSize(8);
-                doc.setFont(undefined, 'italic');
-                doc.text('This report is for informational purposes only and should not be considered as financial advice.', 20, yPosition);
-                doc.text('Generated by Retirement Income Calculator', 20, yPosition + 8);
-                doc.text(`Report Date: ${today}`, 20, yPosition + 16);
-                
                 // Save the PDF
-                doc.save('Retirement_Income_Report.pdf');
+                doc.save(`${inputs.clientName}_Retirement_Report.pdf`);
                 
             } catch (error) {
                 console.error('Error generating PDF:', error);
                 alert('There was an error generating the PDF. Please try again.');
-            } finally {
-                // Re-enable button
-                pdfBtn.disabled = false;
-                pdfBtn.textContent = '📄 Generate PDF Report';
             }
         }
+        
+        // Initialize app
+        async function initializeApp() {
+            // Check if user is already logged in
+            const { data: { session } } = await supabase.auth.getSession();
+            
+            if (session) {
+                currentUser = session.user;
+                showDashboard();
+            } else {
+                showAuth();
+            }
+            
+            // Listen for auth changes
+            supabase.auth.onAuthStateChange((event, session) => {
+                if (event === 'SIGNED_IN') {
+                    currentUser = session.user;
+                    showDashboard();
+                } else if (event === 'SIGNED_OUT') {
+                    currentUser = null;
+                    showAuth();
+                }
+            });
+        }
+        
+        // Additional functions for loading and duplicating calculations
+        async function loadCalculation(id) {
+            try {
+                const { data, error } = await supabase
+                    .from('calculations')
+                    .select('*')
+                    .eq('id', id)
+                    .single();
+                
+                if (error) throw error;
+                
+                // Switch to calculator and populate with saved data
+                showCalculator();
+                
+                // Wait for calculator to load, then populate fields
+                setTimeout(() => {
+                    populateCalculatorFields(data.calculation_data);
+                }, 100);
+                
+            } catch (error) {
+                console.error('Load calculation error:', error);
+                alert('Error loading calculation');
+            }
+        }
+        
+        async function duplicateCalculation(id) {
+            try {
+                const { data, error } = await supabase
+                    .from('calculations')
+                    .select('*')
+                    .eq('id', id)
+                    .single();
+                
+                if (error) throw error;
+                
+                // Create a copy with modified name
+                const originalName = data.client_name || 'Client';
+                const copyData = {
+                    ...data.calculation_data,
+                    clientName: `${originalName} (Copy)`
+                };
+                
+                // Switch to calculator and populate with copied data
+                showCalculator();
+                
+                setTimeout(() => {
+                    populateCalculatorFields(copyData);
+                }, 100);
+                
+            } catch (error) {
+                console.error('Duplicate calculation error:', error);
+                alert('Error duplicating calculation');
+            }
+        }
+        
+        function populateCalculatorFields(data) {
+            // Populate main fields
+            if (data.clientName) document.getElementById('clientName').value = data.clientName;
+            if (data.currentAge) document.getElementById('currentAge').value = data.currentAge;
+            if (data.retirementAge) document.getElementById('retirementAge').value = data.retirementAge;
+            if (data.lifeExpectancy) document.getElementById('lifeExpectancy').value = data.lifeExpectancy;
+            if (data.currentRRSP) document.getElementById('rrsp').value = data.currentRRSP;
+            if (data.currentTFSA) document.getElementById('tfsa').value = data.currentTFSA;
+            if (data.currentNonReg) document.getElementById('nonReg').value = data.currentNonReg;
+            if (data.pensionIncome) document.getElementById('pensionIncome').value = data.pensionIncome;
+            if (data.govBenefits) document.getElementById('govBenefits').value = data.govBenefits;
+            
+            // Handle contribution frequency
+            if (data.contributionFrequency) {
+                document.getElementById('contributionFrequency').value = data.contributionFrequency;
+                
+                const isMonthly = data.contributionFrequency === 'monthly';
+                const rrspContrib = isMonthly ? data.rrspContribution / 12 : data.rrspContribution;
+                const tfsaContrib = isMonthly ? data.tfsaContribution / 12 : data.tfsaContribution;
+                
+                document.getElementById('rrspContribution').value = Math.round(rrspContrib);
+                document.getElementById('tfsaContribution').value = Math.round(tfsaContrib);
+            }
+            
+            if (data.investmentReturn) document.getElementById('investmentReturn').value = data.investmentReturn;
+            if (data.inflationRate) document.getElementById('inflationRate').value = data.inflationRate;
+            
+            // Handle spouse data
+            if (data.includeSpouse && data.spouse) {
+                document.getElementById('includeSpouse').checked = true;
+                document.getElementById('spouseSection').classList.remove('hidden');
+                
+                if (data.spouse.name) document.getElementById('spouseName').value = data.spouse.name;
+                if (data.spouse.age) document.getElementById('spouseAge').value = data.spouse.age;
+                if (data.spouse.retirementAge) document.getElementById('spouseRetirementAge').value = data.spouse.retirementAge;
+                if (data.spouse.currentRRSP) document.getElementById('spouseRRSP').value = data.spouse.currentRRSP;
+                if (data.spouse.currentTFSA) document.getElementById('spouseTFSA').value = data.spouse.currentTFSA;
+                if (data.spouse.currentNonReg) document.getElementById('spouseNonReg').value = data.spouse.currentNonReg;
+                
+                const isMonthly = data.contributionFrequency === 'monthly';
+                const spouseRRSPContrib = isMonthly ? data.spouse.rrspContribution / 12 : data.spouse.rrspContribution;
+                const spouseTFSAContrib = isMonthly ? data.spouse.tfsaContribution / 12 : data.spouse.tfsaContribution;
+                
+                document.getElementById('spouseRRSPContrib').value = Math.round(spouseRRSPContrib);
+                document.getElementById('spouseTFSAContrib').value = Math.round(spouseTFSAContrib);
+                
+                // These fields might not exist in older saved data
+                if (document.getElementById('spousePension')) {
+                    document.getElementById('spousePension').value = data.spousePensionTotal || 0;
+                }
+                if (document.getElementById('spouseGovBenefits')) {
+                    document.getElementById('spouseGovBenefits').value = data.spouseGovTotal || 0;
+                }
+            }
+        }
+        
+        // Start the application
+        window.addEventListener('DOMContentLoaded', initializeApp);
     </script>
 </body>
 </html>
+                }<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Retirement Planning Portal</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+            min-height: 80vh;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #2c3e50, #4a6741);
+            color: white;
+            padding: 30px;
+            text-align: center;
+            position: relative;
+        }
+        
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+        
+        .header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+        
+        .user-info {
+            position: absolute;
+            top: 20px;
+            right: 30px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .user-email {
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+        
+        .logout-btn {
+            background: rgba(255,255,255,0.2);
+            color: white;
+            border: 1px solid rgba(255,255,255,0.3);
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: background 0.3s;
+        }
+        
+        .logout-btn:hover {
+            background: rgba(255,255,255,0.3);
+        }
+        
+        /* Auth Styles */
+        .auth-container {
+            max-width: 400px;
+            margin: 0 auto;
+            padding: 60px 40px;
+            text-align: center;
+        }
+        
+        .auth-title {
+            font-size: 2rem;
+            color: #2c3e50;
+            margin-bottom: 30px;
+        }
+        
+        .auth-form {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        
+        .input-group {
+            text-align: left;
+        }
+        
+        .input-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #34495e;
+        }
+        
+        .input-group input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e1e8ed;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.3s ease;
+        }
+        
+        .input-group input:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+        
+        .auth-btn {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: transform 0.2s ease;
+        }
+        
+        .auth-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+        }
+        
+        .auth-btn:disabled {
+            background: #bdc3c7;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .auth-switch {
+            margin-top: 20px;
+            color: #7f8c8d;
+        }
+        
+        .auth-switch a {
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 600;
+        }
+        
+        .auth-switch a:hover {
+            text-decoration: underline;
+        }
+        
+        .error-message {
+            background: #ffe6e6;
+            color: #d63031;
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            border-left: 4px solid #d63031;
+        }
+        
+        .success-message {
+            background: #e8f5e8;
+            color: #27ae60;
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            border-left: 4px solid #27ae60;
+        }
+        
+        /* Dashboard Styles */
+        .dashboard {
+            padding: 40px;
+        }
+        
+        .dashboard-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+        
+        .dashboard-title {
+            font-size: 2rem;
+            color: #2c3e50;
+        }
+        
+        .dashboard-actions {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+        
+        .btn {
+            padding: 12px 24px;
+            border-radius: 8px;
+            border: none;
+            font-weight: 600;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: transform 0.2s ease;
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+        }
+        
+        .btn-secondary {
+            background: #f8f9fa;
+            color: #2c3e50;
+            border: 2px solid #e1e8ed;
+        }
+        
+        .calculations-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 30px;
+        }
+        
+        .calculation-card {
+            background: white;
+            border: 2px solid #f1f3f4;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        
+        .calculation-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+        }
+        
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 15px;
+        }
+        
+        .card-title {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+        
+        .card-date {
+            font-size: 0.9rem;
+            color: #7f8c8d;
+        }
+        
+        .card-info {
+            margin-bottom: 15px;
+        }
+        
+        .card-info p {
+            margin-bottom: 5px;
+            color: #34495e;
+        }
+        
+        .card-income {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #27ae60;
+            margin-bottom: 15px;
+        }
+        
+        .card-actions {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        
+        .btn-small {
+            padding: 8px 16px;
+            font-size: 0.9rem;
+        }
+        
+        .btn-danger {
+            background: #e74c3c;
+            color: white;
+        }
+        
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #7f8c8d;
+        }
+        
+        .empty-state-icon {
+            font-size: 4rem;
+            margin-bottom: 20px;
+        }
+        
+        .hidden {
+            display: none;
+        }
+        
+        /* Calculator Integration */
+        .calculator-embed {
+            width: 100%;
+            border: none;
+            min-height: 800px;
+            border-radius: 10px;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+        }
+        
+        @media (max-width: 768px) {
+            .dashboard-header {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            
+            .dashboard-actions {
+                justify-content: center;
+            }
+            
+            .calculations-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .user-info {
+                position: static;
+                justify-content: center;
+                margin-top: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Auth Section -->
+    <div id="authSection" class="container">
+        <div class="header">
+            <h1>🏖️ Retirement Planning Portal</h1>
+            <p>Secure, personalized retirement planning</p>
+        </div>
+        
+        <div class="auth-container">
+            <!-- Login Form -->
+            <div id="loginForm">
+                <h2 class="auth-title">Welcome Back</h2>
+                <div id="authMessage"></div>
+                <form class="auth-form" onsubmit="handleLogin(event)">
+                    <div class="input-group">
+                        <label for="loginEmail">Email</label>
+                        <input type="email" id="loginEmail" required>
+                    </div>
+                    <div class="input-group">
+                        <label for="loginPassword">Password</label>
+                        <input type="password" id="loginPassword" required>
+                    </div>
+                    <button type="submit" class="auth-btn" id="loginBtn">Sign In</button>
+                </form>
+                <div class="auth-switch">
+                    Don't have an account? <a href="#" onclick="showRegister()">Sign up</a>
+                </div>
+            </div>
+            
+            <!-- Register Form -->
+            <div id="registerForm" class="hidden">
+                <h2 class="auth-title">Create Account</h2>
+                <div id="registerMessage"></div>
+                <form class="auth-form" onsubmit="handleRegister(event)">
+                    <div class="input-group">
+                        <label for="registerEmail">Email</label>
+                        <input type="email" id="registerEmail" required>
+                    </div>
+                    <div class="input-group">
+                        <label for="registerPassword">Password</label>
+                        <input type="password" id="registerPassword" required minlength="6">
+                    </div>
+                    <div class="input-group">
+                        <label for="confirmPassword">Confirm Password</label>
+                        <input type="password" id="confirmPassword" required minlength="6">
+                    </div>
+                    <button type="submit" class="auth-btn" id="registerBtn">Create Account</button>
+                </form>
+                <div class="auth-switch">
+                    Already have an account? <a href="#" onclick="showLogin()">Sign in</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Dashboard Section -->
+    <div id="dashboardSection" class="container hidden">
+        <div class="header">
+            <h1>🏖️ Retirement Planning Portal</h1>
+            <p>Your personalized retirement calculations</p>
+            <div class="user-info">
+                <span class="user-email" id="userEmail"></span>
+                <button class="logout-btn" onclick="handleLogout()">Logout</button>
+            </div>
+        </div>
+        
+        <div class="dashboard">
+            <div class="dashboard-header">
+                <h2 class="dashboard-title">Your Calculations</h2>
+                <div class="dashboard-actions">
+                    <button class="btn btn-primary" onclick="showCalculator()">
+                        ➕ New Calculation
+                    </button>
+                    <button class="btn btn-secondary" onclick="refreshDashboard()">
+                        🔄 Refresh
+                    </button>
+                </div>
+            </div>
+            
+            <div id="calculationsContainer">
+                <div class="empty-state">
+                    <div class="empty-state-icon">📊</div>
+                    <h3>No calculations yet</h3>
+                    <p>Create your first retirement calculation to get started!</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Calculator Section -->
+    <div id="calculatorSection" class="container hidden">
+        <div class="header">
+            <h1>🏖️ Retirement Calculator</h1>
+            <p>Plan your financial future</p>
+            <div class="user-info">
+                <span class="user-email" id="calcUserEmail"></span>
+                <button class="logout-btn" onclick="backToDashboard()">← Back to Dashboard</button>
+            </div>
+        </div>
+        
+        <div id="calculatorContent">
+            <!-- Calculator will be loaded here -->
+        </div>
+    </div>
+    
+    <!-- Supabase JS -->
+    <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+    <!-- jsPDF -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    
+    <script>
+        // Supabase configuration
+        const SUPABASE_URL = 'https://znouzvccbqnaubeankos.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inpub3V6dmNjYnFuYXViZWFua29zIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTcwMzExODIsImV4cCI6MjA3MjYwNzE4Mn0.eZnmUqFYu7x_LbnkrviGt3TZkqWf0lyVIgWeTNmjNYw';
+        
+        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        
+        let currentUser = null;
+        let calculationResults = null;
+        
+        // Auth Functions
+        async function handleLogin(event) {
+            event.preventDefault();
+            
+            const email = document.getElementById('loginEmail').value;
+            const password = document.getElementById('loginPassword').value;
+            const loginBtn = document.getElementById('loginBtn');
+            
+            loginBtn.disabled = true;
+            loginBtn.textContent = 'Signing in...';
+            
+            try {
+                const { data, error } = await supabase.auth.signInWithPassword({
+                    email: email,
+                    password: password
+                });
+                
+                if (error) throw error;
+                
+                showMessage('authMessage', 'Login successful!', 'success');
+                currentUser = data.user;
+                showDashboard();
+                
+            } catch (error) {
+                showMessage('authMessage', error.message, 'error');
+            } finally {
+                loginBtn.disabled = false;
+                loginBtn.textContent = 'Sign In';
+            }
+        }
+        
+        async function handleRegister(event) {
+            event.preventDefault();
+            
+            const email = document.getElementById('registerEmail').value;
+            const password = document.getElementById('registerPassword').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+            const registerBtn = document.getElementById('registerBtn');
+            
+            if (password !== confirmPassword) {
+                showMessage('registerMessage', 'Passwords do not match', 'error');
+                return;
+            }
+            
+            registerBtn.disabled = true;
+            registerBtn.textContent = 'Creating account...';
+            
+            try {
+                const { data, error } = await supabase.auth.signUp({
+                    email: email,
+                    password: password
+                });
+                
+                if (error) throw error;
+                
+                showMessage('registerMessage', 'Account created! Please check your email to verify your account.', 'success');
+                
+                // Auto switch to login after a delay
+                setTimeout(() => {
+                    showLogin();
+                }, 3000);
+                
+            } catch (error) {
+                showMessage('registerMessage', error.message, 'error');
+            } finally {
+                registerBtn.disabled = false;
+                registerBtn.textContent = 'Create Account';
+            }
+        }
+        
+        async function handleLogout() {
+            try {
+                const { error } = await supabase.auth.signOut();
+                if (error) throw error;
+                
+                currentUser = null;
+                showAuth();
+            } catch (error) {
+                console.error('Logout error:', error);
+            }
+        }
+        
+        // UI Functions
+        function showLogin() {
+            document.getElementById('loginForm').classList.remove('hidden');
+            document.getElementById('registerForm').classList.add('hidden');
+            clearMessages();
+        }
+        
+        function showRegister() {
+            document.getElementById('loginForm').classList.add('hidden');
+            document.getElementById('registerForm').classList.remove('hidden');
+            clearMessages();
+        }
+        
+        function showAuth() {
+            document.getElementById('authSection').classList.remove('hidden');
+            document.getElementById('dashboardSection').classList.add('hidden');
+            document.getElementById('calculatorSection').classList.add('hidden');
+        }
+        
+        function showDashboard() {
+            document.getElementById('authSection').classList.add('hidden');
+            document.getElementById('dashboardSection').classList.remove('hidden');
+            document.getElementById('calculatorSection').classList.add('hidden');
+            
+            document.getElementById('userEmail').textContent = currentUser.email;
+            loadCalculations();
+        }
+        
+        function showCalculator() {
+            document.getElementById('authSection').classList.add('hidden');
+            document.getElementById('dashboardSection').classList.add('hidden');
+            document.getElementById('calculatorSection').classList.remove('hidden');
+            
+            document.getElementById('calcUserEmail').textContent = currentUser.email;
+            loadCalculatorContent();
+        }
+        
+        function backToDashboard() {
+            showDashboard();
+        }
+        
+        function showMessage(elementId, message, type) {
+            const element = document.getElementById(elementId);
+            element.innerHTML = `<div class="${type}-message">${message}</div>`;
+        }
+        
+        function clearMessages() {
+            document.getElementById('authMessage').innerHTML = '';
+            document.getElementById('registerMessage').innerHTML = '';
+        }
+        
+        // Database Functions
+        async function saveCalculation(calculationData, resultsData) {
+            if (!currentUser) return;
+            
+            try {
+                const { data, error } = await supabase
+                    .from('calculations')
+                    .insert([{
+                        user_id: currentUser.id,
+                        client_name: calculationData.clientName,
+                        spouse_name: calculationData.spouse?.name || null,
+                        calculation_data: calculationData,
+                        results_data: resultsData
+                    }]);
+                
+                if (error) throw error;
+                
+                alert('Calculation saved successfully!');
+                return data;
+            } catch (error) {
+                console.error('Save error:', error);
+                alert('Error saving calculation: ' + error.message);
+            }
+        }
+        
+        async function loadCalculations() {
+            if (!currentUser) return;
+            
+            try {
+                const { data, error } = await supabase
+                    .from('calculations')
+                    .select('*')
+                    .eq('user_id', currentUser.id)
+                    .order('created_at', { ascending: false });
+                
+                if (error) throw error;
+                
+                displayCalculations(data);
+            } catch (error) {
+                console.error('Load error:', error);
+            }
+        }
+        
+        function displayCalculations(calculations) {
+            const container = document.getElementById('calculationsContainer');
+            
+            if (!calculations || calculations.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-state-icon">📊</div>
+                        <h3>No calculations yet</h3>
+                        <p>Create your first retirement calculation to get started!</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            const grid = document.createElement('div');
+            grid.className = 'calculations-grid';
+            
+            calculations.forEach(calc => {
+                const card = createCalculationCard(calc);
+                grid.appendChild(card);
+            });
+            
+            container.innerHTML = '';
+            container.appendChild(grid);
+        }
+        
+        function createCalculationCard(calculation) {
+            const card = document.createElement('div');
+            card.className = 'calculation-card';
+            
+            const date = new Date(calculation.created_at).toLocaleDateString();
+            const clientName = calculation.client_name || 'Unnamed';
+            const spouseName = calculation.spouse_name;
+            const totalIncome = calculation.results_data?.totalIncome || 0;
+            
+            card.innerHTML = `
+                <div class="card-header">
+                    <div class="card-title">${clientName}${spouseName ? ` & ${spouseName}` : ''}</div>
+                    <div class="card-date">${date}</div>
+                </div>
+                <div class="card-info">
+                    <p><strong>Age:</strong> ${calculation.calculation_data?.currentAge || 'N/A'}</p>
+                    <p><strong>Retirement Age:</strong> ${calculation.calculation_data?.retirementAge || 'N/A'}</p>
+                    <p><strong>Years to Retirement:</strong> ${calculation.results_data?.yearsToRetirement || 'N/A'}</p>
+                </div>
+                <div class="card-income">
+                    $${Math.round(totalIncome).toLocaleString()}/year
+                </div>
+                <div class="card-actions">
+                    <button class="btn btn-primary btn-small" onclick="loadCalculation(${calculation.id})">
+                        📊 View Details
+                    </button>
+                    <button class="btn btn-secondary btn-small" onclick="duplicateCalculation(${calculation.id})">
+                        📋 Duplicate
+                    </button>
+                    <button class="btn btn-danger btn-small" onclick="deleteCalculation(${calculation.id})">
+                        🗑️ Delete
+                    </button>
+                </div>
+            `;
+            
+            return card;
+        }
+        
+        async function deleteCalculation(id) {
+            if (!confirm('Are you sure you want to delete this calculation?')) return;
+            
+            try {
+                const { error } = await supabase
+                    .from('calculations')
+                    .delete()
+                    .eq('id', id);
+                
+                if (error) throw error;
+                
+                loadCalculations(); // Refresh the list
+            } catch (error) {
+                console.error('Delete error:', error);
+                alert('Error deleting calculation');
+            }
+        }
+        
+        function refreshDashboard() {
+            loadCalculations();
+        }
+        
+        // Calculator Integration
+        function loadCalculatorContent() {
+            const content = document.getElementById('calculatorContent');
+            content.innerHTML = `
+                <div style="padding: 40px;">
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 40px; min-height: 600px;">
+                        <div id="calculatorForm">
+                            <!-- Calculator form will be loaded here -->
+                        </div>
+                        <div id="calculatorResults">
+                            <!-- Results will be shown here -->
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            // Load the actual calculator form
+            loadCalculatorForm();
+        }
+        
+        function loadCalculatorForm() {
+            const formContainer = document.getElementById('calculatorForm');
+            formContainer.innerHTML = `
+                <h2 style="color: #2c3e50; margin-bottom: 25px; border-bottom: 3px solid #667eea; padding-bottom: 10px;">Personal Information</h2>
+                
+                <div style="margin-bottom: 20px;">
+                    <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #34495e;">Your Full Name</label>
+                    <input type="text" id="clientName" placeholder="Enter your full name" style="width: 100%; padding: 12px 15px; border: 2px solid #e1e8ed; border-radius: 8px; font-size: 1rem;">
+                </div>
+                
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 15px;">
+                    <div>
+                        <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #34495e;">Current Age</label>
+                        <input type="number" id="currentAge" value="45" min="25" max="100" style="width: 100%; padding: 12px 15px; border: 2px solid #e1e8ed; border-radius: 8px; font-size: 1rem;">
+                    </div>
+                    <div>
+                        <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #34495e;">Retirement Age</label>
+                        <input type="number" id="retirementAge" value="65" min="50" max="80" style="width: 100%; padding: 12px 15px; border: 2px solid #e1e8ed; border-radius: 8px; font-size: 1rem;">
+                    </div>
+                </div>
+                
+                <div style="margin-bottom: 20px;">
+                    <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #34495e;">Life Expectancy</label>
+                    <input type="number" id="lifeExpectancy" value="85" min="65" max="100" style="width: 100%; padding: 12px 15px; border: 2px solid #e1e8ed; border-radius: 8px; font-size: 1rem;">
+                </div>
+                
+                <h3 style="color: #2c3e50; margin: 30px 0 20px 0; font-size: 1.3rem;">Current Savings</h3>
+                
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 15px;">
+                    <div>
+                        <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #34495e;">Current RRSP Balance ($)</label>
+                        <input type="number" id="rrsp" value="150000" min="0" step="1000" style="width: 100%; padding: 12px 15px; border: 2px solid #e1e8ed; border-radius: 8px; font-size: 1rem;">
+                    </div>
+                    <div>
+                        <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #34495e;">Current TFSA Balance ($)</label>
+                        <input type="number" id="tfsa" value="75000" min="0" step="1000" style="width: 100%; padding: 12px 15px; border: 2px solid #e1e8ed; border-radius: 8px; font-size: 1rem;">
+                    </div>
+                </div>
+                
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 15px;">
+                    <div>
+                        <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #34495e;">Non-Registered Savings ($)</label>
+                        <input type="number" id="nonReg" value="50000" min="0" step="1000" style="width: 100%; padding: 12px 15px; border: 2px solid #e1e8ed; border-radius: 8px; font-size: 1rem;">
+                    </div>
+                    <div>
+                        <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #34495e;">Annual Pension Income ($)</label>
+                        <input type="number" id="pensionIncome" value="12000" min="0" step="1000" style="width: 100%; padding: 12px 15px; border: 2px solid #e1e8ed; border-radius: 8px; font-size: 1rem;">
+                    </div>
+                </div>
+                
+                <h3 style="color: #2c3e50; margin: 30px 0 20px 0; font-size: 1.3rem;">Ongoing Contributions</h3>
+                
+                <div style="margin-bottom: 20px;">
+                    <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #34495e;">Contribution Frequency</label>
+                    <select id="contributionFrequency" style="width: 100%; padding: 12px 15px; border: 2px solid #e1e8ed; border-radius: 8px; font-size: 1rem;">
+                        <option value="monthly" selected>Monthly</option>
+                        <option value="annual">Annual</option>
+                    </select>
+                </div>
+                
+                <div style="display: grid; grid-template-columns: 1fr 1
+
