@@ -391,6 +391,130 @@
             document.getElementById('forgotPage').classList.add('hidden');
             document.getElementById('dashboardPage').classList.remove('hidden');
             document.getElementById('userEmail').textContent = currentUser.email;
+            loadCalculations();
+        }
+        
+        // Load saved calculations
+        async function loadCalculations() {
+            if (!currentUser) return;
+            
+            try {
+                const { data, error } = await supabase
+                    .from('calculations')
+                    .select('*')
+                    .eq('user_id', currentUser.id)
+                    .order('created_at', { ascending: false });
+                
+                if (error) throw error;
+                
+                displayCalculations(data);
+            } catch (error) {
+                console.error('Load error:', error);
+            }
+        }
+        
+        function displayCalculations(calculations) {
+            const container = document.getElementById('calculationsContainer');
+            
+            if (!calculations || calculations.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-state-icon">📊</div>
+                        <h3>No calculations yet</h3>
+                        <p>Create your first retirement calculation to get started!</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            const grid = document.createElement('div');
+            grid.className = 'calculations-grid';
+            
+            calculations.forEach(calc => {
+                const card = createCalculationCard(calc);
+                grid.appendChild(card);
+            });
+            
+            container.innerHTML = '';
+            container.appendChild(grid);
+        }
+        
+        function createCalculationCard(calculation) {
+            const card = document.createElement('div');
+            card.className = 'calculation-card';
+            
+            const date = new Date(calculation.created_at).toLocaleDateString();
+            const clientName = calculation.client_name || 'Unnamed';
+            const spouseName = calculation.spouse_name;
+            const totalIncome = calculation.results_data?.totalIncome || 0;
+            
+            card.innerHTML = `
+                <div class="card-header">
+                    <div class="card-title">${clientName}${spouseName ? ` & ${spouseName}` : ''}</div>
+                    <div class="card-date">${date}</div>
+                </div>
+                <div class="card-income">
+                    ${Math.round(totalIncome).toLocaleString()}/year
+                </div>
+                <div class="card-info">
+                    <p><strong>Age:</strong> ${calculation.calculation_data?.currentAge || 'N/A'}</p>
+                    <p><strong>Retirement Age:</strong> ${calculation.calculation_data?.retirementAge || 'N/A'}</p>
+                    <p><strong>Years to Retirement:</strong> ${calculation.results_data?.yearsToRetirement || 'N/A'}</p>
+                </div>
+                <div class="card-actions">
+                    <button class="btn-small btn-primary" onclick="downloadCalculationPDF(${calculation.id})">
+                        📄 Download PDF
+                    </button>
+                    <button class="btn-small btn-danger" onclick="deleteCalculation(${calculation.id})">
+                        🗑️ Delete
+                    </button>
+                </div>
+            `;
+            
+            return card;
+        }
+        
+        async function deleteCalculation(id) {
+            if (!confirm('Are you sure you want to delete this calculation?')) return;
+            
+            try {
+                const { error } = await supabase
+                    .from('calculations')
+                    .delete()
+                    .eq('id', id);
+                
+                if (error) throw error;
+                
+                loadCalculations(); // Refresh the list
+            } catch (error) {
+                console.error('Delete error:', error);
+                alert('Error deleting calculation');
+            }
+        }
+        
+        async function downloadCalculationPDF(id) {
+            try {
+                const { data, error } = await supabase
+                    .from('calculations')
+                    .select('*')
+                    .eq('id', id)
+                    .single();
+                
+                if (error) throw error;
+                
+                // Generate PDF with saved data
+                generateSavedPDF(data);
+                
+            } catch (error) {
+                console.error('PDF generation error:', error);
+                alert('Error generating PDF');
+            }
+        }
+        
+        function generateSavedPDF(savedCalculation) {
+            // This function generates PDF from saved calculation data
+            // Implementation would be similar to the calculator's generatePDF function
+            alert('PDF generation from saved data - feature coming soon!');
         }
         
         // Message Handling
