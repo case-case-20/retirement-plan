@@ -183,6 +183,27 @@
             font-size: 0.9rem;
         }
         
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #666;
+        }
+        
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #667eea;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 15px;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
         @media (max-width: 768px) {
             .main-menu {
                 grid-template-columns: 1fr;
@@ -219,7 +240,7 @@
 <body>
     <div class="container">
         <div class="header">
-            <a href="#" class="logout-btn" onclick="logout()">Logout</a>
+            <button class="logout-btn" onclick="signOut()">Logout</button>
             
             <div class="welcome-text">
                 <h1>Welcome Back</h1>
@@ -227,8 +248,10 @@
             </div>
             
             <div class="user-info" id="userInfo">
-                <span id="welcomeMessage">Welcome, Advisor</span> | 
-                <span id="loginTime">Logged in today</span>
+                <div class="loading">
+                    <div class="spinner"></div>
+                    <p>Loading user information...</p>
+                </div>
             </div>
         </div>
         
@@ -250,121 +273,159 @@
         
         <div class="stats-bar">
             <div class="stat-item">
-                <div class="stat-number" id="totalClients">0</div>
+                <div class="stat-number" id="totalClients">-</div>
                 <div class="stat-label">Total Clients</div>
             </div>
             <div class="stat-item">
-                <div class="stat-number" id="retirementPlans">0</div>
+                <div class="stat-number" id="retirementPlans">-</div>
                 <div class="stat-label">Retirement Plans</div>
             </div>
             <div class="stat-item">
-                <div class="stat-number" id="insuranceAnalyses">0</div>
+                <div class="stat-number" id="insuranceAnalyses">-</div>
                 <div class="stat-label">Insurance Analyses</div>
             </div>
             <div class="stat-item">
-                <div class="stat-number" id="thisWeekActivity">0</div>
+                <div class="stat-number" id="thisWeekActivity">-</div>
                 <div class="stat-label">This Week</div>
             </div>
         </div>
     </div>
     
+    <!-- Supabase JS -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    
     <script>
-        // Check authentication
-        function checkAuth() {
-            if (localStorage.getItem('advisorLoggedIn') !== 'true') {
+        // Initialize Supabase
+        const SUPABASE_URL = 'https://cilghirivogsoxjgstui.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNpbGdoaXJpdm9nc294amdzdHVpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTcyNzM2MTAsImV4cCI6MjA3Mjg0OTYxMH0._6D9W6a5zrQ7mTtqdmIpp-UWlzEG2jQOELUefnBqySo';
+        
+        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        
+        let currentUser = null;
+        
+        // Initialize the page
+        init();
+        
+        async function init() {
+            await checkAuth();
+            if (currentUser) {
+                await loadUserInfo();
+                await loadStats();
+            }
+        }
+        
+        async function checkAuth() {
+            try {
+                const { data: { session } } = await supabase.auth.getSession();
+                if (!session) {
+                    window.location.href = 'index.html';
+                    return;
+                }
+                currentUser = session.user;
+            } catch (error) {
+                console.error('Auth check error:', error);
                 window.location.href = 'index.html';
-                return false;
             }
-            
-            // Check if login is still valid (less than 24 hours)
-            const loginTime = localStorage.getItem('loginTime');
-            if (loginTime) {
-                const loginDate = new Date(loginTime);
-                const now = new Date();
-                const hoursSinceLogin = (now - loginDate) / (1000 * 60 * 60);
+        }
+        
+        async function loadUserInfo() {
+            try {
+                // Get user profile from database
+                const { data: profile, error } = await supabase
+                    .from('user_profiles')
+                    .select('*')
+                    .eq('id', currentUser.id)
+                    .single();
                 
-                if (hoursSinceLogin >= 24) {
-                    logout();
-                    return false;
+                if (error && error.code !== 'PGRST116') { // PGRST116 = no rows returned
+                    throw error;
                 }
-            }
-            
-            return true;
-        }
-        
-        // Logout function
-        function logout() {
-            localStorage.removeItem('advisorLoggedIn');
-            localStorage.removeItem('advisorUsername');
-            localStorage.removeItem('loginTime');
-            window.location.href = 'index.html';
-        }
-        
-        // Update user info
-        function updateUserInfo() {
-            const username = localStorage.getItem('advisorUsername') || 'Advisor';
-            const loginTime = localStorage.getItem('loginTime');
-            
-            document.getElementById('welcomeMessage').textContent = `Welcome, ${username}`;
-            
-            if (loginTime) {
-                const loginDate = new Date(loginTime);
-                const now = new Date();
-                const today = new Date().toDateString();
                 
-                if (loginDate.toDateString() === today) {
-                    document.getElementById('loginTime').textContent = 
-                        `Logged in at ${loginDate.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}`;
-                } else {
-                    document.getElementById('loginTime').textContent = 
-                        `Logged in on ${loginDate.toLocaleDateString()}`;
-                }
+                // Display user info
+                const userInfoDiv = document.getElementById('userInfo');
+                const displayName = profile?.full_name || currentUser.email || 'Advisor';
+                const company = profile?.company_name ? ` | ${profile.company_name}` : '';
+                const signInTime = new Date(currentUser.created_at).toLocaleDateString();
+                
+                userInfoDiv.innerHTML = `
+                    <span>Welcome, ${displayName}${company}</span> | 
+                    <span>Member since ${signInTime}</span>
+                `;
+                
+            } catch (error) {
+                console.error('Error loading user info:', error);
+                document.getElementById('userInfo').innerHTML = `
+                    <span>Welcome, ${currentUser.email}</span>
+                `;
             }
         }
         
-        // Load statistics
-        function loadStats() {
-            // Load retirement plans
-            const retirementPlans = JSON.parse(localStorage.getItem('clientRetirementPlans') || '[]');
-            
-            // Load insurance analyses
-            const insuranceAnalyses = JSON.parse(localStorage.getItem('clientInsuranceAnalyses') || '[]');
-            
-            // Combine all documents
-            const allDocuments = [...retirementPlans, ...insuranceAnalyses];
-            
-            // Get unique clients
-            const uniqueClients = new Set();
-            allDocuments.forEach(doc => {
-                if (doc.inputs && doc.inputs.clientName) {
-                    uniqueClients.add(doc.inputs.clientName.toLowerCase());
-                }
-            });
-            
-            // Calculate this week's activity
-            const oneWeekAgo = new Date();
-            oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
-            
-            const thisWeekDocs = allDocuments.filter(doc => {
-                if (doc.createdDate) {
-                    const docDate = new Date(doc.createdDate);
+        async function loadStats() {
+            try {
+                // Load client documents from Supabase
+                const { data: documents, error } = await supabase
+                    .from('client_documents')
+                    .select('*')
+                    .eq('user_id', currentUser.id);
+                
+                if (error) throw error;
+                
+                // Calculate statistics
+                const retirementPlans = documents.filter(doc => doc.document_type === 'retirement');
+                const insuranceAnalyses = documents.filter(doc => doc.document_type === 'insurance');
+                
+                // Get unique clients
+                const uniqueClients = new Set();
+                documents.forEach(doc => {
+                    if (doc.client_name) {
+                        uniqueClients.add(doc.client_name.toLowerCase());
+                    }
+                });
+                
+                // Calculate this week's activity
+                const oneWeekAgo = new Date();
+                oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
+                
+                const thisWeekDocs = documents.filter(doc => {
+                    const docDate = new Date(doc.created_at);
                     return docDate >= oneWeekAgo;
-                }
-                return false;
-            });
-            
-            // Update display
-            document.getElementById('totalClients').textContent = uniqueClients.size;
-            document.getElementById('retirementPlans').textContent = retirementPlans.length;
-            document.getElementById('insuranceAnalyses').textContent = insuranceAnalyses.length;
-            document.getElementById('thisWeekActivity').textContent = thisWeekDocs.length;
+                });
+                
+                // Update display
+                document.getElementById('totalClients').textContent = uniqueClients.size;
+                document.getElementById('retirementPlans').textContent = retirementPlans.length;
+                document.getElementById('insuranceAnalyses').textContent = insuranceAnalyses.length;
+                document.getElementById('thisWeekActivity').textContent = thisWeekDocs.length;
+                
+            } catch (error) {
+                console.error('Error loading stats:', error);
+                // Set fallback values
+                document.getElementById('totalClients').textContent = '0';
+                document.getElementById('retirementPlans').textContent = '0';
+                document.getElementById('insuranceAnalyses').textContent = '0';
+                document.getElementById('thisWeekActivity').textContent = '0';
+            }
         }
         
-        // Initialize page
-        if (checkAuth()) {
-            updateUserInfo();
-            loadStats();
+        async function signOut() {
+            try {
+                const { error } = await supabase.auth.signOut();
+                if (error) throw error;
+                
+                window.location.href = 'index.html';
+            } catch (error) {
+                console.error('Error signing out:', error);
+                // Force redirect even if signout fails
+                window.location.href = 'index.html';
+            }
         }
+        
+        // Listen for auth state changes
+        supabase.auth.onAuthStateChange((event, session) => {
+            if (event === 'SIGNED_OUT' || !session) {
+                window.location.href = 'index.html';
+            }
+        });
     </script>
 </body>
 </html>
