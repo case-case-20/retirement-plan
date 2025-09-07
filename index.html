@@ -26,7 +26,7 @@
             border-radius: 20px;
             box-shadow: 0 20px 40px rgba(0,0,0,0.1);
             overflow: hidden;
-            max-width: 450px;
+            max-width: 400px;
             width: 100%;
         }
         
@@ -42,46 +42,8 @@
             margin-bottom: 10px;
         }
         
-        .auth-header p {
-            font-size: 1rem;
-            opacity: 0.9;
-        }
-        
         .auth-form {
             padding: 40px 30px;
-        }
-        
-        .form-tabs {
-            display: flex;
-            margin-bottom: 30px;
-            background: #f8f9fa;
-            border-radius: 8px;
-            padding: 4px;
-        }
-        
-        .tab-btn {
-            flex: 1;
-            padding: 12px;
-            text-align: center;
-            background: transparent;
-            border: none;
-            border-radius: 6px;
-            cursor: pointer;
-            font-weight: 600;
-            transition: all 0.3s ease;
-        }
-        
-        .tab-btn.active {
-            background: #667eea;
-            color: white;
-        }
-        
-        .tab-content {
-            display: none;
-        }
-        
-        .tab-content.active {
-            display: block;
         }
         
         .form-group {
@@ -136,30 +98,6 @@
             transform: none;
         }
         
-        .magic-link-btn {
-            background: linear-gradient(135deg, #3498db, #2980b9);
-            margin-top: 10px;
-        }
-        
-        .magic-link-btn:hover {
-            box-shadow: 0 10px 20px rgba(52, 152, 219, 0.3);
-        }
-        
-        .forgot-password {
-            text-align: center;
-            margin-top: 20px;
-        }
-        
-        .forgot-password a {
-            color: #667eea;
-            text-decoration: none;
-            font-size: 0.9rem;
-        }
-        
-        .forgot-password a:hover {
-            text-decoration: underline;
-        }
-        
         .error-message, .success-message {
             border-radius: 6px;
             padding: 12px;
@@ -180,44 +118,19 @@
             border: 1px solid #c3e6cb;
         }
         
-        .loading {
-            display: none;
+        .toggle-form {
             text-align: center;
-            padding: 20px;
-            color: #666;
+            margin-top: 20px;
         }
         
-        .loading .spinner {
-            width: 40px;
-            height: 40px;
-            border: 3px solid #f3f3f3;
-            border-top: 3px solid #667eea;
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-            margin: 0 auto 15px;
+        .toggle-form a {
+            color: #667eea;
+            text-decoration: none;
+            font-size: 0.9rem;
         }
         
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-        
-        @media (max-width: 480px) {
-            .auth-container {
-                margin: 10px;
-            }
-            
-            .auth-header {
-                padding: 30px 20px;
-            }
-            
-            .auth-form {
-                padding: 30px 20px;
-            }
-            
-            .auth-header h1 {
-                font-size: 1.8rem;
-            }
+        .toggle-form a:hover {
+            text-decoration: underline;
         }
     </style>
 </head>
@@ -229,77 +142,58 @@
         </div>
         
         <div class="auth-form">
-            <div class="form-tabs">
-                <button class="tab-btn active" onclick="switchTab('signin')">Sign In</button>
-                <button class="tab-btn" onclick="switchTab('signup')">Sign Up</button>
-            </div>
-            
-            <div class="error-message" id="errorMessage"></div>
-            <div class="success-message" id="successMessage"></div>
-            
-            <div class="loading" id="loadingMessage">
-                <div class="spinner"></div>
-                <p>Processing...</p>
-            </div>
+            <div class="error-message" id="errorMsg"></div>
+            <div class="success-message" id="successMsg"></div>
             
             <!-- Sign In Form -->
-            <div id="signin" class="tab-content active">
+            <div id="loginForm">
                 <form id="signinForm">
                     <div class="form-group">
-                        <label for="signinEmail">Email Address</label>
-                        <input type="email" id="signinEmail" name="email" required autocomplete="email">
+                        <label for="email">Email Address</label>
+                        <input type="email" id="email" required>
                     </div>
                     
                     <div class="form-group">
-                        <label for="signinPassword">Password</label>
-                        <input type="password" id="signinPassword" name="password" required autocomplete="current-password">
+                        <label for="password">Password</label>
+                        <input type="password" id="password" required>
                     </div>
                     
-                    <button type="submit" class="auth-btn" id="signinBtn">
+                    <button type="submit" class="auth-btn" id="loginBtn">
                         Sign In
-                    </button>
-                    
-                    <button type="button" class="auth-btn magic-link-btn" onclick="sendMagicLink('signin')">
-                        Send Magic Link
                     </button>
                 </form>
                 
-                <div class="forgot-password">
-                    <a href="#" onclick="resetPassword()">Forgot your password?</a>
+                <div class="toggle-form">
+                    <a href="#" onclick="showSignup()">Don't have an account? Sign up</a>
                 </div>
             </div>
             
             <!-- Sign Up Form -->
-            <div id="signup" class="tab-content">
-                <form id="signupForm">
+            <div id="signupForm" style="display: none;">
+                <form id="registerForm">
                     <div class="form-group">
-                        <label for="signupFullName">Full Name</label>
-                        <input type="text" id="signupFullName" name="fullName" required>
+                        <label for="signupName">Full Name</label>
+                        <input type="text" id="signupName" required>
                     </div>
                     
                     <div class="form-group">
                         <label for="signupEmail">Email Address</label>
-                        <input type="email" id="signupEmail" name="email" required autocomplete="email">
+                        <input type="email" id="signupEmail" required>
                     </div>
                     
                     <div class="form-group">
                         <label for="signupPassword">Password</label>
-                        <input type="password" id="signupPassword" name="password" required autocomplete="new-password" minlength="6">
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="signupCompany">Company Name (Optional)</label>
-                        <input type="text" id="signupCompany" name="company">
+                        <input type="password" id="signupPassword" required minlength="6">
                     </div>
                     
                     <button type="submit" class="auth-btn" id="signupBtn">
                         Create Account
                     </button>
-                    
-                    <button type="button" class="auth-btn magic-link-btn" onclick="sendMagicLink('signup')">
-                        Sign Up with Magic Link
-                    </button>
                 </form>
+                
+                <div class="toggle-form">
+                    <a href="#" onclick="showLogin()">Already have an account? Sign in</a>
+                </div>
             </div>
         </div>
     </div>
@@ -314,66 +208,63 @@
         
         const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
         
-        // Check if user is already signed in
-        checkAuthStatus();
+        // Check if already signed in
+        checkAuth();
         
-        async function checkAuthStatus() {
-            const { data: { session } } = await supabase.auth.getSession();
-            if (session) {
-                // User is already signed in, redirect to homepage
-                window.location.href = 'homepage.html';
+        async function checkAuth() {
+            try {
+                const { data: { session } } = await supabase.auth.getSession();
+                if (session) {
+                    window.location.href = 'homepage.html';
+                }
+            } catch (error) {
+                console.log('Auth check failed:', error);
             }
         }
         
-        // Tab switching
-        function switchTab(tab) {
-            // Update tab buttons
-            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
-            document.querySelector(`[onclick="switchTab('${tab}')"]`).classList.add('active');
-            
-            // Update tab content
-            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
-            document.getElementById(tab).classList.add('active');
-            
-            // Clear messages
-            hideMessages();
-        }
-        
-        function showLoading() {
-            document.getElementById('loadingMessage').style.display = 'block';
-            hideMessages();
-        }
-        
-        function hideLoading() {
-            document.getElementById('loadingMessage').style.display = 'none';
-        }
-        
         function showError(message) {
-            hideLoading();
-            const errorDiv = document.getElementById('errorMessage');
+            const errorDiv = document.getElementById('errorMsg');
+            const successDiv = document.getElementById('successMsg');
+            successDiv.style.display = 'none';
             errorDiv.textContent = message;
             errorDiv.style.display = 'block';
         }
         
         function showSuccess(message) {
-            hideLoading();
-            const successDiv = document.getElementById('successMessage');
+            const errorDiv = document.getElementById('errorMsg');
+            const successDiv = document.getElementById('successMsg');
+            errorDiv.style.display = 'none';
             successDiv.textContent = message;
             successDiv.style.display = 'block';
         }
         
-        function hideMessages() {
-            document.getElementById('errorMessage').style.display = 'none';
-            document.getElementById('successMessage').style.display = 'none';
+        function showSignup() {
+            document.getElementById('loginForm').style.display = 'none';
+            document.getElementById('signupForm').style.display = 'block';
+            hideMessages();
         }
         
-        // Sign In Form Handler
+        function showLogin() {
+            document.getElementById('signupForm').style.display = 'none';
+            document.getElementById('loginForm').style.display = 'block';
+            hideMessages();
+        }
+        
+        function hideMessages() {
+            document.getElementById('errorMsg').style.display = 'none';
+            document.getElementById('successMsg').style.display = 'none';
+        }
+        
+        // Sign In Handler
         document.getElementById('signinForm').addEventListener('submit', async (e) => {
             e.preventDefault();
-            showLoading();
             
-            const email = document.getElementById('signinEmail').value;
-            const password = document.getElementById('signinPassword').value;
+            const btn = document.getElementById('loginBtn');
+            btn.disabled = true;
+            btn.textContent = 'Signing in...';
+            
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
             
             try {
                 const { data, error } = await supabase.auth.signInWithPassword({
@@ -383,23 +274,27 @@
                 
                 if (error) throw error;
                 
-                // Successful sign in
+                // Success - redirect
                 window.location.href = 'homepage.html';
                 
             } catch (error) {
-                showError(error.message || 'Failed to sign in. Please try again.');
+                showError(error.message);
+                btn.disabled = false;
+                btn.textContent = 'Sign In';
             }
         });
         
-        // Sign Up Form Handler
-        document.getElementById('signupForm').addEventListener('submit', async (e) => {
+        // Sign Up Handler
+        document.getElementById('registerForm').addEventListener('submit', async (e) => {
             e.preventDefault();
-            showLoading();
             
-            const fullName = document.getElementById('signupFullName').value;
+            const btn = document.getElementById('signupBtn');
+            btn.disabled = true;
+            btn.textContent = 'Creating account...';
+            
+            const name = document.getElementById('signupName').value;
             const email = document.getElementById('signupEmail').value;
             const password = document.getElementById('signupPassword').value;
-            const company = document.getElementById('signupCompany').value;
             
             try {
                 const { data, error } = await supabase.auth.signUp({
@@ -407,80 +302,23 @@
                     password: password,
                     options: {
                         data: {
-                            full_name: fullName,
-                            company_name: company
+                            full_name: name
                         }
                     }
                 });
                 
                 if (error) throw error;
                 
-                if (data.user && !data.session) {
-                    // Email confirmation required
-                    showSuccess('Please check your email and click the confirmation link to activate your account.');
-                } else {
-                    // Account created and signed in
-                    window.location.href = 'homepage.html';
-                }
+                showSuccess('Account created! Please check your email to verify your account before signing in.');
+                btn.disabled = false;
+                btn.textContent = 'Create Account';
                 
             } catch (error) {
-                showError(error.message || 'Failed to create account. Please try again.');
+                showError(error.message);
+                btn.disabled = false;
+                btn.textContent = 'Create Account';
             }
         });
-        
-        // Magic Link Functions
-        async function sendMagicLink(type) {
-            const emailInput = type === 'signin' ? 'signinEmail' : 'signupEmail';
-            const email = document.getElementById(emailInput).value;
-            
-            if (!email) {
-                showError('Please enter your email address first.');
-                return;
-            }
-            
-            showLoading();
-            
-            try {
-                const { error } = await supabase.auth.signInWithOtp({
-                    email: email,
-                    options: {
-                        emailRedirectTo: window.location.origin + '/homepage.html'
-                    }
-                });
-                
-                if (error) throw error;
-                
-                showSuccess('Magic link sent! Check your email and click the link to sign in.');
-                
-            } catch (error) {
-                showError(error.message || 'Failed to send magic link. Please try again.');
-            }
-        }
-        
-        // Password Reset
-        async function resetPassword() {
-            const email = document.getElementById('signinEmail').value;
-            
-            if (!email) {
-                showError('Please enter your email address first.');
-                return;
-            }
-            
-            showLoading();
-            
-            try {
-                const { error } = await supabase.auth.resetPasswordForEmail(email, {
-                    redirectTo: window.location.origin + '/reset-password.html'
-                });
-                
-                if (error) throw error;
-                
-                showSuccess('Password reset link sent to your email!');
-                
-            } catch (error) {
-                showError(error.message || 'Failed to send reset link. Please try again.');
-            }
-        }
     </script>
 </body>
 </html>
