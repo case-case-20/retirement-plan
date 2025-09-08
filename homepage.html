@@ -263,13 +263,12 @@
                 <button class="menu-btn">Open Dashboard</button>
             </a>
             
-            <a href="calculators.html" class="menu-card calculator-card">
-                <div class="menu-icon">🧮</div>
-                <h2>Financial Calculators</h2>
-                <p>Access retirement planning and insurance needs calculators to create comprehensive analyses for your clients.</p>
-                <button class="menu-btn">Use Calculators</button>
-            </a>
-        </div>
+           <div class="menu-card calculator-card" onclick="goToCalculators()">
+    <div class="menu-icon">🧮</div>
+    <h2>Financial Calculators</h2>
+    <p>Access retirement planning and insurance needs calculators to create comprehensive analyses for your clients.</p>
+    <button class="menu-btn">Use Calculators</button>
+</div>
         
         <div class="stats-bar">
             <div class="stat-item">
@@ -425,7 +424,11 @@
             if (event === 'SIGNED_OUT' || !session) {
                 window.location.href = 'index.html';
             }
+            
         });
+         function goToCalculators() {
+            window.location.href = 'calculators.html';
+        }
     </script>
 </body>
 </html>
