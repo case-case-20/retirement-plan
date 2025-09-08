@@ -201,6 +201,27 @@
             transform: none;
         }
         
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #666;
+        }
+        
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #667eea;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 15px;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
         @media (max-width: 768px) {
             .calculators-grid {
                 grid-template-columns: 1fr;
@@ -239,90 +260,114 @@
             <p>Choose the right calculator for your client's needs. Each tool provides comprehensive analysis and professional reports.</p>
         </div>
         
-        <div class="calculators-grid">
-            <!-- Retirement Calculator -->
-            <a href="calculator.html" class="calculator-card retirement-card">
-                <div class="calculator-icon">🏖️</div>
-                <h2>Retirement Income Calculator</h2>
-                <p>Comprehensive retirement planning tool for Canadian accounts (RRSP, TFSA, CPP, OAS) with inflation-adjusted projections.</p>
+        <div id="loadingScreen" class="loading">
+            <div class="spinner"></div>
+            <p>Loading calculators...</p>
+        </div>
+        
+        <div id="calculatorsContent" style="display: none;">
+            <div class="calculators-grid">
+                <!-- Retirement Calculator -->
+                <a href="calculator.html" class="calculator-card retirement-card">
+                    <div class="calculator-icon">🏖️</div>
+                    <h2>Retirement Income Calculator</h2>
+                    <p>Comprehensive retirement planning tool for Canadian accounts (RRSP, TFSA, CPP, OAS) with inflation-adjusted projections.</p>
+                    
+                    <ul class="features-list">
+                        <li>RRSP & TFSA contribution analysis</li>
+                        <li>Government benefits integration</li>
+                        <li>Spouse planning support</li>
+                        <li>4% withdrawal rule calculations</li>
+                        <li>Professional PDF reports</li>
+                    </ul>
+                    
+                    <button class="calculator-btn">Start Retirement Analysis</button>
+                </a>
                 
-                <ul class="features-list">
-                    <li>RRSP & TFSA contribution analysis</li>
-                    <li>Government benefits integration</li>
-                    <li>Spouse planning support</li>
-                    <li>4% withdrawal rule calculations</li>
-                    <li>Professional PDF reports</li>
-                </ul>
+                <!-- Insurance Calculator -->
+                <a href="insurance-calculator.html" class="calculator-card insurance-card">
+                    <div class="calculator-icon">🛡️</div>
+                    <h2>Life Insurance Needs Calculator</h2>
+                    <p>Determine optimal life insurance coverage using multiple calculation methods tailored to your client's situation.</p>
+                    
+                    <ul class="features-list">
+                        <li>Needs analysis methodology</li>
+                        <li>Income replacement calculations</li>
+                        <li>Hybrid approach options</li>
+                        <li>Debt & education planning</li>
+                        <li>Coverage recommendations</li>
+                    </ul>
+                    
+                    <button class="calculator-btn">Start Insurance Analysis</button>
+                </a>
                 
-                <button class="calculator-btn">Start Retirement Analysis</button>
-            </a>
-            
-            <!-- Insurance Calculator -->
-            <a href="insurance-calculator.html" class="calculator-card insurance-card">
-                <div class="calculator-icon">🛡️</div>
-                <h2>Life Insurance Needs Calculator</h2>
-                <p>Determine optimal life insurance coverage using multiple calculation methods tailored to your client's situation.</p>
+                <!-- Future Calculator Placeholder -->
+                <div class="calculator-card coming-soon">
+                    <div class="calculator-icon">🏠</div>
+                    <h2>Mortgage Calculator</h2>
+                    <p>Coming soon - Comprehensive mortgage analysis including affordability, amortization, and refinancing scenarios.</p>
+                    
+                    <ul class="features-list">
+                        <li>Affordability analysis</li>
+                        <li>Payment comparisons</li>
+                        <li>Refinancing scenarios</li>
+                        <li>Prepayment strategies</li>
+                        <li>Total cost analysis</li>
+                    </ul>
+                    
+                    <button class="calculator-btn">Coming Soon</button>
+                </div>
                 
-                <ul class="features-list">
-                    <li>Needs analysis methodology</li>
-                    <li>Income replacement calculations</li>
-                    <li>Hybrid approach options</li>
-                    <li>Debt & education planning</li>
-                    <li>Coverage recommendations</li>
-                </ul>
-                
-                <button class="calculator-btn">Start Insurance Analysis</button>
-            </a>
-            
-            <!-- Future Calculator Placeholder -->
-            <div class="calculator-card coming-soon">
-                <div class="calculator-icon">🏠</div>
-                <h2>Mortgage Calculator</h2>
-                <p>Coming soon - Comprehensive mortgage analysis including affordability, amortization, and refinancing scenarios.</p>
-                
-                <ul class="features-list">
-                    <li>Affordability analysis</li>
-                    <li>Payment comparisons</li>
-                    <li>Refinancing scenarios</li>
-                    <li>Prepayment strategies</li>
-                    <li>Total cost analysis</li>
-                </ul>
-                
-                <button class="calculator-btn">Coming Soon</button>
-            </div>
-            
-            <!-- Future Calculator Placeholder -->
-            <div class="calculator-card coming-soon">
-                <div class="calculator-icon">📈</div>
-                <h2>Investment Calculator</h2>
-                <p>Coming soon - Investment growth projections, portfolio analysis, and asset allocation recommendations.</p>
-                
-                <ul class="features-list">
-                    <li>Growth projections</li>
-                    <li>Risk analysis</li>
-                    <li>Asset allocation</li>
-                    <li>Tax efficiency</li>
-                    <li>Performance tracking</li>
-                </ul>
-                
-                <button class="calculator-btn">Coming Soon</button>
+                <!-- Future Calculator Placeholder -->
+                <div class="calculator-card coming-soon">
+                    <div class="calculator-icon">📈</div>
+                    <h2>Investment Calculator</h2>
+                    <p>Coming soon - Investment growth projections, portfolio analysis, and asset allocation recommendations.</p>
+                    
+                    <ul class="features-list">
+                        <li>Growth projections</li>
+                        <li>Risk analysis</li>
+                        <li>Asset allocation</li>
+                        <li>Tax efficiency</li>
+                        <li>Performance tracking</li>
+                    </ul>
+                    
+                    <button class="calculator-btn">Coming Soon</button>
+                </div>
             </div>
         </div>
     </div>
 
-    <script>
-        // Check authentication
-        function checkAuth() {
-            if (localStorage.getItem('advisorLoggedIn') !== 'true') {
-                window.location.href = 'index.html';
-                return false;
-            }
-            return true;
-        }
+    <!-- Supabase JS -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
-        // Initialize authentication check
-        if (!checkAuth()) {
-            // Will redirect to login
+    <script>
+        // Initialize Supabase
+        const SUPABASE_URL = 'https://cilghirivogsoxjgstui.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNpbGdoaXJpdm9nc294amdzdHVpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTcyNzM2MTAsImV4cCI6MjA3Mjg0OTYxMH0._6D9W6a5zrQ7mTtqdmIpp-UWlzEG2jQOELUefnBqySo';
+        
+        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+        // Check authentication and initialize page
+        init();
+
+        async function init() {
+            try {
+                const { data: { session } } = await supabase.auth.getSession();
+                if (!session) {
+                    // Not authenticated, redirect to login
+                    window.location.href = 'index.html';
+                    return;
+                }
+
+                // User is authenticated, show the calculators
+                document.getElementById('loadingScreen').style.display = 'none';
+                document.getElementById('calculatorsContent').style.display = 'block';
+
+            } catch (error) {
+                console.error('Auth check failed:', error);
+                window.location.href = 'index.html';
+            }
         }
     </script>
 </body>
