@@ -533,6 +533,9 @@
             // Update chart
             updateChart(federalTax, provincialTax, cppContributions + eiContributions, netIncome, totalIncome);
             
+            // Update RRSP recommendations
+            updateRRSPRecommendations(employment, taxableIncome, marginalRate, rrspContribution, province);
+            
             // Update tax tips
             updateTaxTips(taxableIncome, marginalRate, rrspContribution);
 
