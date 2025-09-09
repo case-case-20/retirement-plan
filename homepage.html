@@ -131,6 +131,60 @@
             margin-bottom: 25px;
             font-size: 1.1rem;
         }
+
+        .calculator-features {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 15px;
+            margin: 15px 0;
+            text-align: left;
+        }
+        
+        .calculator-features ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        
+        .calculator-features li {
+            padding: 5px 0;
+            color: #555;
+            font-size: 0.9rem;
+            position: relative;
+            padding-left: 25px;
+        }
+        
+        .calculator-features li::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            font-size: 0.8rem;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+
+        .calculator-features li:nth-child(1)::before {
+            content: '🏖️';
+            background: #27ae60;
+        }
+
+        .calculator-features li:nth-child(2)::before {
+            content: '🛡️';
+            background: #e74c3c;
+        }
+
+        .calculator-features li:nth-child(3)::before {
+            content: '🧮';
+            background: #3498db;
+        }
         
         .menu-btn {
             background: linear-gradient(135deg, #667eea, #764ba2);
@@ -259,16 +313,26 @@
             <a href="dashboard.html" class="menu-card dashboard-card">
                 <div class="menu-icon">📊</div>
                 <h2>Client Dashboard</h2>
-                <p>View and manage all your client cases, retirement plans, and insurance analyses in one place.</p>
+                <p>View and manage all your client cases, retirement plans, insurance analyses, and tax calculations in one place.</p>
                 <button class="menu-btn">Open Dashboard</button>
             </a>
             
            <div class="menu-card calculator-card" onclick="goToCalculators()">
-    <div class="menu-icon">🧮</div>
-    <h2>Financial Calculators</h2>
-    <p>Access retirement planning and insurance needs calculators to create comprehensive analyses for your clients.</p>
-    <button class="menu-btn">Use Calculators</button>
-</div>
+                <div class="menu-icon">🧮</div>
+                <h2>Financial Calculators</h2>
+                <p>Professional calculation tools for comprehensive client analysis and planning.</p>
+                
+                <div class="calculator-features">
+                    <ul>
+                        <li>Retirement Income Planning</li>
+                        <li>Life Insurance Needs Analysis</li>
+                        <li>Canadian Tax Calculator</li>
+                    </ul>
+                </div>
+                
+                <button class="menu-btn">Access Calculators</button>
+            </div>
+        </div>
         
         <div class="stats-bar">
             <div class="stat-item">
