@@ -109,6 +109,10 @@
         .insurance-card .calculator-icon {
             color: #e74c3c;
         }
+
+        .tax-card .calculator-icon {
+            color: #3498db;
+        }
         
         .calculator-card h2 {
             font-size: 1.8rem;
@@ -147,6 +151,10 @@
         .insurance-card .features-list li::before {
             color: #e74c3c;
         }
+
+        .tax-card .features-list li::before {
+            color: #3498db;
+        }
         
         .calculator-btn {
             background: linear-gradient(135deg, #667eea, #764ba2);
@@ -172,6 +180,10 @@
         
         .insurance-card:hover .calculator-btn {
             background: linear-gradient(135deg, #e74c3c, #c0392b);
+        }
+
+        .tax-card:hover .calculator-btn {
+            background: linear-gradient(135deg, #3498db, #2980b9);
         }
         
         .coming-soon {
@@ -299,6 +311,23 @@
                     </ul>
                     
                     <button class="calculator-btn">Start Insurance Analysis</button>
+                </a>
+
+                <!-- Tax Calculator -->
+                <a href="tax-calculator.html" class="calculator-card tax-card">
+                    <div class="calculator-icon">🧮</div>
+                    <h2>Canadian Tax Calculator</h2>
+                    <p>Calculate comprehensive tax obligations across all income sources with province-specific calculations and planning recommendations.</p>
+                    
+                    <ul class="features-list">
+                        <li>All income sources included</li>
+                        <li>Province-specific calculations</li>
+                        <li>Federal & provincial breakdown</li>
+                        <li>CPP/EI contribution analysis</li>
+                        <li>Tax planning recommendations</li>
+                    </ul>
+                    
+                    <button class="calculator-btn">Calculate Taxes</button>
                 </a>
                 
                 <!-- Future Calculator Placeholder -->
