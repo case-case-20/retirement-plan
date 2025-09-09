@@ -1,0 +1,642 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tax Calculator - Retirement Planning</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0;
+        }
+
+        .input-section {
+            padding: 40px;
+            background: #f8f9ff;
+        }
+
+        .results-section {
+            padding: 40px;
+            background: white;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: #333;
+            font-size: 1.1em;
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #e1e5e9;
+            border-radius: 8px;
+            font-size: 1em;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #4facfe;
+        }
+
+        .income-sources {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        }
+
+        .income-sources h3 {
+            color: #333;
+            margin-bottom: 15px;
+            font-size: 1.3em;
+        }
+
+        .calculate-btn {
+            width: 100%;
+            padding: 18px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.2em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.2s ease;
+        }
+
+        .calculate-btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .save-btn {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.1em;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 20px;
+            transition: transform 0.2s ease;
+        }
+
+        .save-btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .results {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 25px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+        }
+
+        .results h3 {
+            font-size: 1.5em;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .result-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .result-item:last-child {
+            border-bottom: none;
+        }
+
+        .result-label {
+            font-weight: 500;
+        }
+
+        .result-value {
+            font-weight: bold;
+            font-size: 1.1em;
+        }
+
+        .net-income {
+            background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+            margin-top: 15px;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .tax-chart {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 20px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .chart-bar {
+            height: 30px;
+            border-radius: 5px;
+            margin: 10px 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .federal-tax { background: #ff6b6b; }
+        .provincial-tax { background: #4ecdc4; }
+        .cpp-ei { background: #45b7d1; }
+        .net-income-bar { background: #96ceb4; }
+
+        .chart-label {
+            position: absolute;
+            left: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: white;
+            font-weight: bold;
+            font-size: 0.9em;
+        }
+
+        .back-btn {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: bold;
+            backdrop-filter: blur(10px);
+            transition: background 0.3s ease;
+        }
+
+        .back-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        .tax-tips {
+            background: #f0f8ff;
+            border-left: 4px solid #4facfe;
+            padding: 20px;
+            margin-top: 20px;
+            border-radius: 0 10px 10px 0;
+        }
+
+        .tax-tips h4 {
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .tax-tips p {
+            color: #666;
+            line-height: 1.6;
+        }
+
+        @media (max-width: 768px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+            
+            .header h1 {
+                font-size: 2em;
+            }
+            
+            .input-section,
+            .results-section {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <button class="back-btn" onclick="goBack()">← Back to Dashboard</button>
+    
+    <div class="container">
+        <div class="header">
+            <h1>🧮 Tax Calculator</h1>
+            <p>Calculate your Canadian federal and provincial taxes for 2025</p>
+        </div>
+
+        <div class="main-content">
+            <div class="input-section">
+                <div class="form-group">
+                    <label for="province">Province/Territory:</label>
+                    <select id="province">
+                        <option value="">Select your province...</option>
+                        <option value="AB">Alberta</option>
+                        <option value="BC">British Columbia</option>
+                        <option value="MB">Manitoba</option>
+                        <option value="NB">New Brunswick</option>
+                        <option value="NL">Newfoundland and Labrador</option>
+                        <option value="NS">Nova Scotia</option>
+                        <option value="ON">Ontario</option>
+                        <option value="PE">Prince Edward Island</option>
+                        <option value="QC">Quebec</option>
+                        <option value="SK">Saskatchewan</option>
+                        <option value="NT">Northwest Territories</option>
+                        <option value="NU">Nunavut</option>
+                        <option value="YT">Yukon</option>
+                    </select>
+                </div>
+
+                <div class="income-sources">
+                    <h3>Income Sources</h3>
+                    
+                    <div class="form-group">
+                        <label for="employment">Employment Income:</label>
+                        <input type="number" id="employment" placeholder="$0" min="0" max="5000000">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="selfEmployment">Self-Employment Income:</label>
+                        <input type="number" id="selfEmployment" placeholder="$0" min="0" max="5000000">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="dividend">Dividend Income:</label>
+                        <input type="number" id="dividend" placeholder="$0" min="0" max="5000000">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="interest">Interest Income:</label>
+                        <input type="number" id="interest" placeholder="$0" min="0" max="5000000">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="capitalGains">Capital Gains:</label>
+                        <input type="number" id="capitalGains" placeholder="$0" min="0" max="5000000">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="pension">Pension Income:</label>
+                        <input type="number" id="pension" placeholder="$0" min="0" max="5000000">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="other">Other Income:</label>
+                        <input type="number" id="other" placeholder="$0" min="0" max="5000000">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="rrspContribution">RRSP Contribution:</label>
+                    <input type="number" id="rrspContribution" placeholder="$0" min="0">
+                </div>
+
+                <button class="calculate-btn" onclick="calculateTax()">Calculate Tax</button>
+                <button class="save-btn" onclick="saveCalculation()" id="saveBtn" style="display: none;">Save Calculation</button>
+            </div>
+
+            <div class="results-section">
+                <div id="results" style="display: none;">
+                    <div class="results">
+                        <h3>Tax Breakdown</h3>
+                        <div class="result-item">
+                            <span class="result-label">Total Income:</span>
+                            <span class="result-value" id="totalIncome">$0</span>
+                        </div>
+                        <div class="result-item">
+                            <span class="result-label">Taxable Income:</span>
+                            <span class="result-value" id="taxableIncome">$0</span>
+                        </div>
+                        <div class="result-item">
+                            <span class="result-label">Federal Tax:</span>
+                            <span class="result-value" id="federalTax">$0</span>
+                        </div>
+                        <div class="result-item">
+                            <span class="result-label">Provincial Tax:</span>
+                            <span class="result-value" id="provincialTax">$0</span>
+                        </div>
+                        <div class="result-item">
+                            <span class="result-label">CPP Contributions:</span>
+                            <span class="result-value" id="cppContributions">$0</span>
+                        </div>
+                        <div class="result-item">
+                            <span class="result-label">EI Contributions:</span>
+                            <span class="result-value" id="eiContributions">$0</span>
+                        </div>
+                        <div class="result-item">
+                            <span class="result-label">Total Tax & Contributions:</span>
+                            <span class="result-value" id="totalTax">$0</span>
+                        </div>
+                        
+                        <div class="net-income">
+                            <h3>Net Income: <span id="netIncome">$0</span></h3>
+                            <p>Marginal Tax Rate: <span id="marginalRate">0%</span></p>
+                            <p>Effective Tax Rate: <span id="effectiveRate">0%</span></p>
+                        </div>
+                    </div>
+
+                    <div class="tax-chart">
+                        <h4>Income Distribution</h4>
+                        <div class="chart-bar federal-tax" id="federalBar">
+                            <div class="chart-label">Federal Tax: $0</div>
+                        </div>
+                        <div class="chart-bar provincial-tax" id="provincialBar">
+                            <div class="chart-label">Provincial Tax: $0</div>
+                        </div>
+                        <div class="chart-bar cpp-ei" id="contributionsBar">
+                            <div class="chart-label">CPP/EI: $0</div>
+                        </div>
+                        <div class="chart-bar net-income-bar" id="netIncomeBar">
+                            <div class="chart-label">Net Income: $0</div>
+                        </div>
+                    </div>
+
+                    <div class="tax-tips">
+                        <h4>💡 Tax Planning Tips</h4>
+                        <p id="taxTips">Calculate your taxes to see personalized tax planning suggestions!</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Tax brackets and rates for 2025 (simplified version - you'll want to update with exact rates)
+        const federalBrackets = [
+            { min: 0, max: 55867, rate: 0.15 },
+            { min: 55867, max: 111733, rate: 0.205 },
+            { min: 111733, max: 173205, rate: 0.26 },
+            { min: 173205, max: 246752, rate: 0.29 },
+            { min: 246752, max: Infinity, rate: 0.33 }
+        ];
+
+        const provincialRates = {
+            'ON': [
+                { min: 0, max: 51446, rate: 0.0505 },
+                { min: 51446, max: 102894, rate: 0.0915 },
+                { min: 102894, max: 150000, rate: 0.1116 },
+                { min: 150000, max: 220000, rate: 0.1216 },
+                { min: 220000, max: Infinity, rate: 0.1316 }
+            ],
+            'BC': [
+                { min: 0, max: 47937, rate: 0.0506 },
+                { min: 47937, max: 95875, rate: 0.077 },
+                { min: 95875, max: 110076, rate: 0.105 },
+                { min: 110076, max: 133664, rate: 0.1229 },
+                { min: 133664, max: Infinity, rate: 0.147 }
+            ],
+            'AB': [
+                { min: 0, max: Infinity, rate: 0.10 }
+            ]
+            // Add other provinces as needed
+        };
+
+        function calculateProgressiveTax(income, brackets) {
+            let tax = 0;
+            let remainingIncome = income;
+            
+            for (let bracket of brackets) {
+                if (remainingIncome <= 0) break;
+                
+                const taxableInBracket = Math.min(remainingIncome, bracket.max - bracket.min);
+                tax += taxableInBracket * bracket.rate;
+                remainingIncome -= taxableInBracket;
+            }
+            
+            return tax;
+        }
+
+        function calculateCPP(employmentIncome, selfEmploymentIncome) {
+            const maxCPPEarnings = 71300; // 2025 max
+            const basicExemption = 3500;
+            const cppRate = 0.0595;
+            
+            const totalEarnings = Math.min(employmentIncome + selfEmploymentIncome, maxCPPEarnings);
+            const pensionableEarnings = Math.max(0, totalEarnings - basicExemption);
+            
+            return pensionableEarnings * cppRate;
+        }
+
+        function calculateEI(employmentIncome) {
+            const maxEIEarnings = 68500; // 2025 max
+            const eiRate = 0.0229;
+            
+            return Math.min(employmentIncome, maxEIEarnings) * eiRate;
+        }
+
+        function formatCurrency(amount) {
+            return new Intl.NumberFormat('en-CA', {
+                style: 'currency',
+                currency: 'CAD',
+                minimumFractionDigits: 0,
+                maximumFractionDigits: 0
+            }).format(amount);
+        }
+
+        function calculateTax() {
+            const province = document.getElementById('province').value;
+            if (!province) {
+                alert('Please select your province/territory');
+                return;
+            }
+
+            // Get all income sources
+            const employment = parseFloat(document.getElementById('employment').value) || 0;
+            const selfEmployment = parseFloat(document.getElementById('selfEmployment').value) || 0;
+            const dividend = parseFloat(document.getElementById('dividend').value) || 0;
+            const interest = parseFloat(document.getElementById('interest').value) || 0;
+            const capitalGains = parseFloat(document.getElementById('capitalGains').value) || 0;
+            const pension = parseFloat(document.getElementById('pension').value) || 0;
+            const other = parseFloat(document.getElementById('other').value) || 0;
+            const rrspContribution = parseFloat(document.getElementById('rrspContribution').value) || 0;
+
+            // Calculate total income (capital gains are only 50% taxable)
+            const totalIncome = employment + selfEmployment + dividend + interest + (capitalGains * 0.5) + pension + other;
+            const taxableIncome = Math.max(0, totalIncome - rrspContribution);
+
+            // Calculate taxes
+            const federalTax = calculateProgressiveTax(taxableIncome, federalBrackets);
+            const provincialBrackets = provincialRates[province] || provincialRates['ON']; // Default to ON if province not found
+            const provincialTax = calculateProgressiveTax(taxableIncome, provincialBrackets);
+            
+            // Calculate CPP and EI
+            const cppContributions = calculateCPP(employment, selfEmployment);
+            const eiContributions = calculateEI(employment);
+            
+            const totalTax = federalTax + provincialTax + cppContributions + eiContributions;
+            const netIncome = totalIncome - totalTax;
+            
+            // Calculate tax rates
+            const marginalRate = getMarginalTaxRate(taxableIncome, province);
+            const effectiveRate = totalIncome > 0 ? (totalTax / totalIncome) * 100 : 0;
+
+            // Update results
+            document.getElementById('totalIncome').textContent = formatCurrency(totalIncome);
+            document.getElementById('taxableIncome').textContent = formatCurrency(taxableIncome);
+            document.getElementById('federalTax').textContent = formatCurrency(federalTax);
+            document.getElementById('provincialTax').textContent = formatCurrency(provincialTax);
+            document.getElementById('cppContributions').textContent = formatCurrency(cppContributions);
+            document.getElementById('eiContributions').textContent = formatCurrency(eiContributions);
+            document.getElementById('totalTax').textContent = formatCurrency(totalTax);
+            document.getElementById('netIncome').textContent = formatCurrency(netIncome);
+            document.getElementById('marginalRate').textContent = marginalRate.toFixed(1) + '%';
+            document.getElementById('effectiveRate').textContent = effectiveRate.toFixed(1) + '%';
+
+            // Update chart
+            updateChart(federalTax, provincialTax, cppContributions + eiContributions, netIncome, totalIncome);
+            
+            // Update tax tips
+            updateTaxTips(taxableIncome, marginalRate, rrspContribution);
+
+            // Show results and save button
+            document.getElementById('results').style.display = 'block';
+            document.getElementById('saveBtn').style.display = 'block';
+        }
+
+        function getMarginalTaxRate(income, province) {
+            let federalRate = 0;
+            let provincialRate = 0;
+            
+            // Find federal marginal rate
+            for (let bracket of federalBrackets) {
+                if (income > bracket.min) {
+                    federalRate = bracket.rate;
+                }
+            }
+            
+            // Find provincial marginal rate
+            const provincialBrackets = provincialRates[province] || provincialRates['ON'];
+            for (let bracket of provincialBrackets) {
+                if (income > bracket.min) {
+                    provincialRate = bracket.rate;
+                }
+            }
+            
+            return (federalRate + provincialRate) * 100;
+        }
+
+        function updateChart(federal, provincial, contributions, net, total) {
+            const federalPercent = (federal / total) * 100;
+            const provincialPercent = (provincial / total) * 100;
+            const contributionsPercent = (contributions / total) * 100;
+            const netPercent = (net / total) * 100;
+
+            document.getElementById('federalBar').style.width = federalPercent + '%';
+            document.getElementById('provincialBar').style.width = provincialPercent + '%';
+            document.getElementById('contributionsBar').style.width = contributionsPercent + '%';
+            document.getElementById('netIncomeBar').style.width = netPercent + '%';
+
+            document.querySelector('#federalBar .chart-label').textContent = `Federal Tax: ${formatCurrency(federal)}`;
+            document.querySelector('#provincialBar .chart-label').textContent = `Provincial Tax: ${formatCurrency(provincial)}`;
+            document.querySelector('#contributionsBar .chart-label').textContent = `CPP/EI: ${formatCurrency(contributions)}`;
+            document.querySelector('#netIncomeBar .chart-label').textContent = `Net Income: ${formatCurrency(net)}`;
+        }
+
+        function updateTaxTips(income, marginalRate, rrspContribution) {
+            let tips = '';
+            
+            if (marginalRate > 40) {
+                tips += 'Consider maximizing RRSP contributions to reduce your high marginal tax rate. ';
+            }
+            
+            if (income > 100000 && rrspContribution < 20000) {
+                tips += 'You may benefit from additional RRSP contributions. ';
+            }
+            
+            if (marginalRate > 30) {
+                tips += 'Consider income splitting strategies with your spouse if applicable. ';
+            }
+            
+            tips += 'Consider tax-free savings account (TFSA) for tax-free growth on investments.';
+            
+            document.getElementById('taxTips').textContent = tips;
+        }
+
+        function saveCalculation() {
+            const calculationData = {
+                id: Date.now(),
+                date: new Date().toLocaleDateString(),
+                type: 'tax-calculation',
+                province: document.getElementById('province').value,
+                totalIncome: document.getElementById('totalIncome').textContent,
+                netIncome: document.getElementById('netIncome').textContent,
+                totalTax: document.getElementById('totalTax').textContent,
+                marginalRate: document.getElementById('marginalRate').textContent,
+                effectiveRate: document.getElementById('effectiveRate').textContent
+            };
+
+            // Get existing calculations
+            let savedCalculations = JSON.parse(localStorage.getItem('savedCalculations')) || [];
+            savedCalculations.push(calculationData);
+            
+            // Save to localStorage
+            localStorage.setItem('savedCalculations', JSON.stringify(savedCalculations));
+            
+            alert('Tax calculation saved successfully!');
+        }
+
+        function goBack() {
+            window.location.href = 'dashboard.html';
+        }
+
+        // Auto-calculate on input change
+        document.addEventListener('DOMContentLoaded', function() {
+            const inputs = document.querySelectorAll('input[type="number"]');
+            inputs.forEach(input => {
+                input.addEventListener('input', function() {
+                    // Optional: auto-calculate as user types
+                    // calculateTax();
+                });
+            });
+        });
+    </script>
+</body>
+</html>
